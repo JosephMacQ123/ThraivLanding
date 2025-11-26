@@ -43,12 +43,12 @@ interface SectionTransitionProps {
 export const SectionTransition: React.FC<SectionTransitionProps> = ({ text, theme = 'light' }) => {
   if (!text || text.trim() === '') {
     return (
-      <div className={`py-16 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
-        <div className="container mx-auto px-6">
+      <div className={`py-8 md:py-12 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
+        <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="flex items-center gap-6 max-w-4xl mx-auto"
+            className="flex items-center gap-4 md:gap-6 max-w-3xl mx-auto"
           >
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-gray-300" />
             <span className="text-sm text-gray-400 font-medium">↓</span>
@@ -60,20 +60,20 @@ export const SectionTransition: React.FC<SectionTransitionProps> = ({ text, them
   }
 
   return (
-    <div className={`py-16 md:py-20 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
-      <div className="container mx-auto px-6">
+    <div className={`py-10 md:py-14 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
+      <div className="container mx-auto px-4 md:px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl mx-auto"
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto"
         >
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 mb-6">
+          <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-600 mb-4 md:mb-5">
             {text}
           </h3>
-          <div className="flex items-center gap-6 max-w-2xl mx-auto">
+          <div className="flex items-center gap-4 md:gap-6 max-w-xl mx-auto">
             <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-gray-300" />
-            <span className="text-base md:text-lg text-gray-400 font-medium">↓</span>
+            <span className="text-sm md:text-base text-gray-400 font-medium">↓</span>
             <div className="flex-1 h-px bg-gradient-to-l from-transparent via-gray-300 to-gray-300" />
           </div>
         </motion.div>
@@ -269,7 +269,7 @@ const DelayBar: React.FC<{ percentage: number; color: string; delay?: number }> 
 
 export const FrictionSection: React.FC = () => {
   return (
-    <section className="py-20 md:py-28 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+    <section className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <svg className="w-full h-full">
@@ -280,17 +280,17 @@ export const FrictionSection: React.FC = () => {
         </svg>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="text-center max-w-5xl mx-auto mb-16"
+          className="text-center max-w-4xl mx-auto mb-10 md:mb-14"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-thraiv-navy mb-6 leading-tight">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-thraiv-navy mb-4 md:mb-5 leading-tight">
             {COPY.FRICTION.HEADLINE}
           </h2>
-          <p className="text-xl md:text-2xl lg:text-3xl text-gray-600 leading-relaxed font-medium">
+          <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed font-medium">
             {COPY.FRICTION.SUBHEAD}
           </p>
         </motion.div>
@@ -299,57 +299,59 @@ export const FrictionSection: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-10"
         >
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700">
+          <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-700">
             {COPY.FRICTION.SECTION_TITLE}
           </h3>
         </motion.div>
 
-        {/* DELAY #1 */}
+        {/* DELAY #1 - Premium Hero + List */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="max-w-6xl mx-auto mb-16"
+          className="max-w-5xl mx-auto mb-12 md:mb-16"
         >
           {/* Delay Header */}
-          <div className="mb-6">
-            <h4 className="text-2xl md:text-3xl font-bold text-thraiv-navy mb-2">
+          <div className="mb-6 md:mb-8">
+            <h4 className="text-xl md:text-2xl lg:text-3xl font-bold text-thraiv-navy mb-2">
               {COPY.FRICTION.DELAY_1.TITLE}
             </h4>
-            <p className="text-base md:text-lg text-gray-500 font-medium italic">
+            <p className="text-sm md:text-base lg:text-lg text-gray-500 font-medium italic">
               {COPY.FRICTION.DELAY_1.SUBTITLE}
             </p>
           </div>
 
-          {/* Bar and Timer */}
-          <div className="mb-6 space-y-4">
-            <DelayBar
-              percentage={COPY.FRICTION.DELAY_1.PERCENTAGE}
-              color={COPY.FRICTION.DELAY_1.COLOR}
-              delay={0.3}
-            />
-            <div className="flex justify-end">
+          {/* Hero Stat Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="relative bg-gradient-to-br from-red-50 via-red-100/50 to-red-50 rounded-3xl p-6 md:p-8 mb-6 md:mb-8 border-2 border-red-200 overflow-hidden shadow-xl"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400/10 via-transparent to-red-400/10" />
+            <div className="relative z-10 text-center">
+              <div className="text-xs md:text-sm uppercase tracking-widest text-red-600 font-bold mb-2">Time Lost</div>
               <AnimatedCounter target={COPY.FRICTION.DELAY_1.DURATION} />
+              <div className="text-sm md:text-base text-gray-600 mt-2 font-medium">Average delay before action even starts</div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Example Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+          {/* Clean List */}
+          <div className="space-y-3 md:space-y-4">
             {COPY.FRICTION.DELAY_1.EXAMPLES.map((example, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, scale: 0.85, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.06, type: "spring", stiffness: 120 }}
-                whileHover={{ scale: 1.05, y: -4, boxShadow: "0 20px 40px rgba(239, 68, 68, 0.2)" }}
-                className="relative bg-gradient-to-br from-red-50 via-white to-red-50 p-5 md:p-6 rounded-2xl shadow-lg border-l-4 border-red-500 hover:border-red-600 transition-all group overflow-hidden"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 + i * 0.08 }}
+                className="flex items-start gap-3 md:gap-4 bg-white p-4 md:p-5 rounded-xl border-l-4 border-red-500 shadow-md hover:shadow-lg transition-all group"
               >
-                {/* Subtle glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-red-100/0 via-red-100/50 to-red-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <p className="relative text-base md:text-lg font-black text-gray-900 leading-tight tracking-tight">
+                <div className="flex-shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-sm group-hover:bg-red-500 group-hover:text-white transition-all">
+                  ✕
+                </div>
+                <p className="flex-1 text-sm md:text-base lg:text-lg font-bold text-gray-800 leading-snug">
                   {example}
                 </p>
               </motion.div>
@@ -357,50 +359,52 @@ export const FrictionSection: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* DELAY #2 */}
+        {/* DELAY #2 - Premium Hero + List */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="max-w-6xl mx-auto mb-16"
+          className="max-w-5xl mx-auto mb-12 md:mb-16"
         >
           {/* Delay Header */}
-          <div className="mb-6">
-            <h4 className="text-2xl md:text-3xl font-bold text-thraiv-navy mb-2">
+          <div className="mb-6 md:mb-8">
+            <h4 className="text-xl md:text-2xl lg:text-3xl font-bold text-thraiv-navy mb-2">
               {COPY.FRICTION.DELAY_2.TITLE}
             </h4>
-            <p className="text-base md:text-lg text-gray-500 font-medium italic">
+            <p className="text-sm md:text-base lg:text-lg text-gray-500 font-medium italic">
               {COPY.FRICTION.DELAY_2.SUBTITLE}
             </p>
           </div>
 
-          {/* Bar and Timer */}
-          <div className="mb-6 space-y-4">
-            <DelayBar
-              percentage={COPY.FRICTION.DELAY_2.PERCENTAGE}
-              color={COPY.FRICTION.DELAY_2.COLOR}
-              delay={0.3}
-            />
-            <div className="flex justify-end">
+          {/* Hero Stat Card - Bigger emphasis */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="relative bg-gradient-to-br from-red-100 via-red-200/50 to-orange-100 rounded-3xl p-6 md:p-10 mb-6 md:mb-8 border-2 border-red-300 overflow-hidden shadow-2xl"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-orange-500/10" />
+            <div className="relative z-10 text-center">
+              <div className="text-xs md:text-sm uppercase tracking-widest text-red-700 font-bold mb-2">Time Lost</div>
               <AnimatedCounter target={COPY.FRICTION.DELAY_2.DURATION} duration={2.5} />
+              <div className="text-sm md:text-base text-gray-700 mt-2 font-medium">Even after noticing, the work takes forever</div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Example Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+          {/* Clean List */}
+          <div className="space-y-3 md:space-y-4">
             {COPY.FRICTION.DELAY_2.EXAMPLES.map((example, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, scale: 0.85, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.06, type: "spring", stiffness: 120 }}
-                whileHover={{ scale: 1.05, y: -4, boxShadow: "0 20px 40px rgba(220, 38, 38, 0.25)" }}
-                className="relative bg-gradient-to-br from-red-100 via-white to-orange-50 p-5 md:p-6 rounded-2xl shadow-lg border-l-4 border-red-600 hover:border-red-700 transition-all group overflow-hidden"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 + i * 0.08 }}
+                className="flex items-start gap-3 md:gap-4 bg-white p-4 md:p-5 rounded-xl border-l-4 border-red-600 shadow-md hover:shadow-lg transition-all group"
               >
-                {/* Subtle glow on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-red-200/0 via-red-200/50 to-orange-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <p className="relative text-base md:text-lg font-black text-gray-900 leading-tight tracking-tight">
+                <div className="flex-shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-full bg-red-200 flex items-center justify-center text-red-700 font-bold text-sm group-hover:bg-red-600 group-hover:text-white transition-all">
+                  ✕
+                </div>
+                <p className="flex-1 text-sm md:text-base lg:text-lg font-bold text-gray-800 leading-snug">
                   {example}
                 </p>
               </motion.div>

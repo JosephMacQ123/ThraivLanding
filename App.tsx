@@ -99,18 +99,18 @@ export default function App() {
         <PainSection />
         <SectionTransition text="" theme="light" />
         <FrictionSection />
-        <SectionTransition text="So how do we fix it?" theme="light" />
+        <SectionTransition text="" theme="light" />
         <CostSection />
-        <SectionTransition text="Imagine your business like this..." theme="dark" />
+        <SectionTransition text="" theme="dark" />
         <DreamSection />
-        <SectionTransition text="Here's how it actually works." theme="light" />
+        <SectionTransition text="" theme="light" />
         <HowItWorksSection />
-        <SectionTransition text="What you actually get." theme="dark" />
+        <SectionTransition text="" theme="dark" />
         <OutcomesSection />
-        <SectionTransition text="Is this for you?" theme="light" />
+        <SectionTransition text="" theme="light" />
         <AudienceSection />
         <FAQSection />
-        <SectionTransition text="One more thing..." theme="light" />
+        <SectionTransition text="" theme="light" />
         <UrgencySection />
         <AuditSection onBookAudit={() => setShowAuditForm(true)} />
       </main>
