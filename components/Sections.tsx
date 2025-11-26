@@ -87,23 +87,23 @@ export const SectionTransition: React.FC<SectionTransitionProps> = ({ text, them
 /* -------------------------------------------------------------------------- */
 export const TrustBar: React.FC = () => {
   return (
-    <section className="bg-white border-y border-gray-100 py-12 md:py-16 relative z-20">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-center">
+    <section className="bg-white border-y border-gray-100 py-8 md:py-12 relative z-20">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 items-center justify-center max-w-7xl mx-auto">
             {TRUST_POINTS.map((item, i) => (
                 <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex flex-col items-center text-center gap-2 group cursor-default p-4 rounded-xl hover:bg-blue-50 transition-all duration-300"
+                    className="flex flex-col items-center text-center gap-2 group cursor-default p-3 md:p-4 rounded-xl hover:bg-blue-50 transition-all duration-300"
                 >
-                    <div className="p-3 bg-blue-50 text-thraiv-blue rounded-full mb-2 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
-                        <item.icon size={20} strokeWidth={2} />
+                    <div className="p-2 md:p-3 bg-blue-50 text-thraiv-blue rounded-full mb-1 md:mb-2 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
+                        <item.icon size={18} strokeWidth={2} className="md:w-5 md:h-5" />
                     </div>
                     <div>
-                        <div className="font-bold text-thraiv-navy text-sm md:text-base leading-tight group-hover:text-thraiv-blue transition-colors">{item.label}</div>
-                        <div className="text-xs text-gray-500 font-medium mt-1">{item.value}</div>
+                        <div className="font-bold text-thraiv-navy text-xs md:text-sm leading-tight group-hover:text-thraiv-blue transition-colors">{item.label}</div>
+                        <div className="text-[10px] md:text-xs text-gray-500 font-medium mt-0.5 md:mt-1">{item.value}</div>
                     </div>
                 </motion.div>
             ))}
@@ -118,60 +118,48 @@ export const TrustBar: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const PainSection: React.FC = () => {
   return (
-    <section className="py-16 md:py-20 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="py-12 md:py-16 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
         {/* Headline - As Extension of Hero */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-700 mb-3">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 mb-2 md:mb-3">
             {COPY.PAIN.HEADLINE}
           </h2>
         </motion.div>
 
-        {/* Cards - "Piling Up" Friction Effect */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+        {/* Cards - Compact 3-column grid on mobile */}
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto">
           {COPY.PAIN.CARDS.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
+              viewport={{ once: true, margin: "-30px", amount: 0.2 }}
               transition={{
-                delay: i * 0.03,
-                duration: 0.4,
+                delay: i * 0.02,
+                duration: 0.3,
                 type: "spring",
-                stiffness: 100,
+                stiffness: 120,
                 damping: 15
               }}
-              whileHover={{ y: -4, scale: 1.02 }}
               className={`
-                bg-white p-4 rounded-xl shadow-md border-l-4
-                flex items-center gap-3 hover:shadow-lg transition-shadow duration-300
-                relative
+                bg-white p-2 md:p-3 rounded-lg md:rounded-xl shadow-md border-l-2 md:border-l-4
+                flex flex-col items-center justify-center text-center gap-1 md:gap-2
+                hover:shadow-lg transition-all duration-300 relative
+                min-h-[80px] md:min-h-[100px]
               `}
               style={{
                 borderLeftColor: item.color === 'red' ? '#EF4444' : '#F59E0B'
               }}
             >
-              {/* Subtle pulse on initial load */}
-              <motion.div
-                initial={{ scale: 1 }}
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{
-                  delay: i * 0.03 + 0.5,
-                  duration: 0.3,
-                  times: [0, 0.5, 1]
-                }}
-                className="w-full h-full absolute inset-0 rounded-xl"
-              />
-
-              <div className={`p-2 rounded-lg flex-shrink-0 z-10 ${item.color === 'red' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
-                <item.icon size={20} />
+              <div className={`p-1.5 md:p-2 rounded-lg flex-shrink-0 ${item.color === 'red' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
+                <item.icon size={16} className="md:w-5 md:h-5" />
               </div>
-              <span className="font-bold text-gray-800 text-sm md:text-base leading-tight z-10">{item.text}</span>
+              <span className="font-bold text-gray-800 text-[10px] md:text-sm leading-tight">{item.text}</span>
             </motion.div>
           ))}
         </div>
@@ -686,94 +674,94 @@ export const CostSection: React.FC = () => {
         const effectiveMin = Math.max(0, min - padding);
         const effectiveMax = max + padding;
         const range = effectiveMax - effectiveMin || 1;
-        
+
         return data.map(v => 100 - (((v - effectiveMin) / range) * 100)); // Invert for SVG y-axis
     };
 
     return (
-        <section className="py-24 md:py-32 bg-gradient-to-br from-thraiv-navy to-slate-900 text-white relative overflow-hidden">
+        <section className="py-16 md:py-24 lg:py-32 bg-gradient-to-br from-thraiv-navy to-slate-900 text-white relative overflow-hidden">
              {/* Background Effects */}
              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/10 blur-[120px] rounded-full pointer-events-none"></div>
              <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none"></div>
 
-            <div className="container mx-auto px-6 relative z-10">
-                <SectionHeader 
+            <div className="container mx-auto px-4 md:px-6 relative z-10">
+                <SectionHeader
                     title={COPY.COST.HEADLINE}
                     subtitle={COPY.COST.SUBHEAD}
                     light={true}
-                    className="text-center max-w-4xl mx-auto mb-16 md:mb-20"
+                    className="text-center max-w-4xl mx-auto mb-8 md:mb-12 lg:mb-16"
                 />
 
                 <div className="max-w-7xl mx-auto">
 
                     {/* TOP SECTION: Workflows + Impact Metrics */}
-                    <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-20">
+                    <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12 md:mb-16">
 
                         {/* LEFT COLUMN: CLEAN WORKFLOW COMPARISON */}
-                        <div className="lg:col-span-6 space-y-8 flex flex-col h-full">
+                        <div className="lg:col-span-6 space-y-4 md:space-y-6 flex flex-col h-full">
 
                             {/* MANUAL WORKFLOW */}
-                            <div className="bg-slate-800/50 backdrop-blur-md rounded-3xl p-8 border-2 border-slate-700 flex-1">
-                            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-slate-700">
-                                <div className="p-3 bg-slate-700 rounded-lg text-slate-400">
-                                    <User size={24} />
+                            <div className="bg-slate-800/50 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 border-2 border-slate-700 flex-1">
+                            <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6 pb-3 md:pb-4 border-b border-slate-700">
+                                <div className="p-2 md:p-3 bg-slate-700 rounded-lg text-slate-400">
+                                    <User size={18} className="md:w-6 md:h-6" />
                                 </div>
-                                <h3 className="text-slate-300 font-bold text-2xl md:text-3xl">Manual Workflow</h3>
+                                <h3 className="text-slate-300 font-bold text-lg md:text-2xl">Manual Workflow</h3>
                             </div>
 
-                            <div className="space-y-5">
+                            <div className="space-y-3 md:space-y-4">
                                 {COPY.COST.TIMELINE_OLD.map((point, i) => (
                                     <motion.div
                                         key={i}
                                         initial={{ opacity: 0, x: -20 }}
                                         whileInView={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="flex items-center gap-4 bg-slate-900/50 p-5 rounded-xl border border-slate-700/50"
+                                        className="flex items-center gap-2 md:gap-3 bg-slate-900/50 p-3 md:p-4 rounded-lg md:rounded-xl border border-slate-700/50"
                                     >
-                                        <div className="p-3 bg-slate-700 rounded-lg text-slate-400">
-                                            <point.icon size={22} />
+                                        <div className="p-1.5 md:p-2 bg-slate-700 rounded-lg text-slate-400">
+                                            <point.icon size={16} className="md:w-5 md:h-5" />
                                         </div>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-slate-200 text-base md:text-lg">{point.label}</div>
-                                            <div className="text-sm text-slate-500">{point.sub}</div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-medium text-slate-200 text-xs md:text-sm truncate">{point.label}</div>
+                                            <div className="text-[10px] md:text-xs text-slate-500 truncate">{point.sub}</div>
                                         </div>
-                                        <div className="text-sm text-slate-400 font-mono">{point.delay}</div>
+                                        <div className="text-[10px] md:text-xs text-slate-400 font-mono whitespace-nowrap">{point.delay}</div>
                                     </motion.div>
                                 ))}
                             </div>
                         </div>
 
                         {/* THRAIV WORKFLOW */}
-                        <div className="bg-gradient-to-br from-blue-600/20 to-blue-500/10 backdrop-blur-md rounded-3xl p-8 border-2 border-blue-500/30 relative overflow-hidden flex-1">
+                        <div className="bg-gradient-to-br from-blue-600/20 to-blue-500/10 backdrop-blur-md rounded-2xl md:rounded-3xl p-4 md:p-6 border-2 border-blue-500/30 relative overflow-hidden flex-1">
                             {/* Glow effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-transparent to-blue-500/10" />
 
                             <div className="relative z-10">
-                                <div className="flex items-center gap-3 mb-8 pb-4 border-b border-blue-500/30">
-                                    <div className="p-3 bg-blue-500 rounded-lg text-white">
-                                        <Zap size={24} />
+                                <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6 pb-3 md:pb-4 border-b border-blue-500/30">
+                                    <div className="p-2 md:p-3 bg-blue-500 rounded-lg text-white">
+                                        <Zap size={18} className="md:w-6 md:h-6" />
                                     </div>
-                                    <h3 className="text-white font-bold text-2xl md:text-3xl">Thraiv Workflow</h3>
+                                    <h3 className="text-white font-bold text-lg md:text-2xl">Thraiv Workflow</h3>
                                 </div>
 
-                                <div className="space-y-5">
+                                <div className="space-y-3 md:space-y-4">
                                     {COPY.COST.TIMELINE_NEW.map((point, i) => (
                                         <motion.div
                                             key={i}
                                             initial={{ opacity: 0, x: -20 }}
                                             whileInView={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.2 + (i * 0.1) }}
-                                            className="flex items-center gap-4 bg-blue-900/40 p-5 rounded-xl border border-blue-500/20 backdrop-blur-sm hover:border-blue-400/40 transition-colors"
+                                            className="flex items-center gap-2 md:gap-3 bg-blue-900/40 p-3 md:p-4 rounded-lg md:rounded-xl border border-blue-500/20 backdrop-blur-sm hover:border-blue-400/40 transition-colors"
                                         >
-                                            <div className="p-3 bg-blue-500 rounded-lg text-white">
-                                                <point.icon size={22} />
+                                            <div className="p-1.5 md:p-2 bg-blue-500 rounded-lg text-white">
+                                                <point.icon size={16} className="md:w-5 md:h-5" />
                                             </div>
-                                            <div className="flex-1">
-                                                <div className="font-bold text-white text-base md:text-lg">{point.label}</div>
-                                                <div className="text-sm text-blue-200">{point.sub}</div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-bold text-white text-xs md:text-sm truncate">{point.label}</div>
+                                                <div className="text-[10px] md:text-xs text-blue-200 truncate">{point.sub}</div>
                                             </div>
-                                            <div className="flex items-center gap-1 text-sm font-bold text-green-400">
-                                                <Zap size={14} />
+                                            <div className="flex items-center gap-0.5 md:gap-1 text-[10px] md:text-xs font-bold text-green-400 whitespace-nowrap">
+                                                <Zap size={12} className="md:w-3.5 md:h-3.5" />
                                                 <span>Instant</span>
                                             </div>
                                         </motion.div>

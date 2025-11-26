@@ -165,7 +165,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-start lg:items-center relative z-10">
 
         {/* Left Content */}
-        <div className="relative z-10 order-2 lg:order-1">
+        <div className="relative z-10 order-1 lg:order-1">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -293,7 +293,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
         </div>
 
         {/* Right Animation Canvas */}
-        <div className="relative min-h-[500px] lg:min-h-[600px] w-full flex flex-col items-center justify-center order-1 lg:order-2">
+        <div className="relative min-h-[400px] lg:min-h-[600px] w-full flex flex-col items-center justify-center order-2 lg:order-2">
           {/* Context Label */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
