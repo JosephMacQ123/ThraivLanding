@@ -114,7 +114,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md overflow-y-auto" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-md overflow-y-auto py-8" onClick={onClose}>
       {/* Animated Background Gradient Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -142,7 +142,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 50 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl border border-white/20 my-8 max-h-[90vh] overflow-y-auto"
+        className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl border border-white/20 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         style={{
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
