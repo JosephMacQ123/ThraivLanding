@@ -114,13 +114,39 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md overflow-y-auto" onClick={onClose}>
+      {/* Animated Background Gradient Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 50 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="bg-white rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl"
+        exit={{ opacity: 0, scale: 0.9, y: 50 }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl border border-white/20 my-8 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+        }}
       >
         {/* Close Button - Clean X */}
         <button
@@ -136,30 +162,53 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         <AnimatePresence mode="wait">
           {!submitted ? (
             <motion.div key="form" exit={{ opacity: 0, y: -10 }}>
-              <h2 className="text-2xl md:text-3xl font-bold text-thraiv-navy mb-2">
+              {/* Decorative Top Accent */}
+              <div className="flex items-center justify-center mb-4">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "100px" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="h-1 bg-gradient-to-r from-transparent via-thraiv-blue to-transparent rounded-full"
+                />
+              </div>
+
+              <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-thraiv-navy via-thraiv-blue to-purple-600 mb-2 text-center">
                 Book Your Free Opportunity Audit
               </h2>
-              <p className="text-gray-600 mb-6 text-sm">
+              <p className="text-gray-600 mb-6 text-sm text-center font-medium">
                 15 minutes. Zero cost. Zero pressure.
               </p>
 
-              {/* Progress Indicator */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+              {/* Progress Indicator - Artistic */}
+              <div className="mb-8 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 p-4 rounded-2xl border border-blue-100">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-gray-700 uppercase tracking-wide flex items-center gap-2">
+                    <Sparkles size={14} className="text-thraiv-blue" />
                     Progress
                   </span>
-                  <span className="text-xs font-bold text-thraiv-blue">
-                    {requiredFieldsCompleted}/{totalRequiredFields} completed
-                  </span>
+                  <motion.span
+                    key={requiredFieldsCompleted}
+                    initial={{ scale: 1.3, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-sm font-black text-thraiv-blue"
+                  >
+                    {requiredFieldsCompleted}/{totalRequiredFields}
+                  </motion.span>
                 </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="relative w-full h-3 bg-white rounded-full overflow-hidden shadow-inner">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-thraiv-blue to-blue-600 rounded-full"
+                    className="h-full bg-gradient-to-r from-thraiv-blue via-purple-500 to-blue-600 rounded-full relative"
                     initial={{ width: 0 }}
                     animate={{ width: `${(requiredFieldsCompleted / totalRequiredFields) * 100}%` }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  />
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  >
+                    {/* Shimmer effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    />
+                  </motion.div>
                 </div>
               </div>
 
@@ -343,29 +392,51 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   />
                 </motion.div>
 
-                {/* Submit Button - Full Width */}
-                <motion.button
+                {/* Submit Button - ARTISTIC */}
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  type="submit"
-                  disabled={loading}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-thraiv-blue to-blue-600 text-white font-bold hover:shadow-xl hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                  className="relative mt-8"
                 >
-                  {loading ? (
-                    <>
-                      <Loader size={20} className="animate-spin" />
-                      <span>Booking Your Audit...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Book My Free Audit</span>
-                      <ArrowRight size={20} />
-                    </>
-                  )}
-                </motion.button>
+                  {/* Glow effect behind button */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-xl opacity-50"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                      scale: [0.95, 1.05, 0.95],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+
+                  <motion.button
+                    type="submit"
+                    disabled={loading}
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="relative w-full px-6 py-5 rounded-xl bg-gradient-to-r from-thraiv-blue via-purple-600 to-blue-600 text-white font-black text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+                  >
+                    {/* Animated shine effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                    />
+
+                    {loading ? (
+                      <>
+                        <Loader size={22} className="animate-spin relative z-10" />
+                        <span className="relative z-10">Booking Your Audit...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={20} className="relative z-10 group-hover:rotate-12 transition-transform" />
+                        <span className="relative z-10">Book My Free Audit</span>
+                        <ArrowRight size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </motion.button>
+                </motion.div>
               </form>
             </motion.div>
           ) : (
