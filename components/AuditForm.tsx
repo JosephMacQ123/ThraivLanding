@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, Loader, X, User, Mail, Building2, Phone, Target, MessageSquare, Calendar, Clock, Sparkles, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle, Loader, X, User, Mail, Building2, Phone, Target, MessageSquare, Calendar, Clock, Sparkles, Zap, AlertTriangle } from 'lucide-react';
 
 interface AuditFormProps {
   onClose?: () => void;
@@ -18,6 +18,84 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [completedFields, setCompletedFields] = useState<Set<string>>(new Set());
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem('thraiv_audit_form_draft');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        setFormData(parsed);
+      } catch (e) {
+        console.error('Failed to load draft:', e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formData.name || formData.email || formData.company) {
+      localStorage.setItem('thraiv_audit_form_draft', JSON.stringify(formData));
+    }
+  }, [formData]);
+
+  // Haptic feedback helper
+  const triggerHaptic = (intensity: 'light' | 'medium' | 'heavy' = 'medium') => {
+    if ('vibrate' in navigator) {
+      const patterns = {
+        light: [10],
+        medium: [20],
+        heavy: [30, 10, 30]
+      };
+      navigator.vibrate(patterns[intensity]);
+    }
+  };
+
+  // Sound effects helper
+  const playSound = (frequency: number, duration: number) => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.frequency.value = frequency;
+      oscillator.type = 'sine';
+
+      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + duration);
+    } catch (e) {
+      // Silently fail if audio not supported
+    }
+  };
+
+  // Celebrate field completion
+  const celebrateFieldCompletion = (fieldName: string) => {
+    if (!completedFields.has(fieldName)) {
+      setCompletedFields(prev => new Set([...prev, fieldName]));
+      triggerHaptic('light');
+      playSound(800, 0.1);
+    }
+  };
+
+  // Milestone celebrations
+  useEffect(() => {
+    const progress = requiredFieldsCompleted / totalRequiredFields;
+    if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
+      triggerHaptic('medium');
+      playSound(1000, 0.15);
+    }
+    if (progress === 1) {
+      triggerHaptic('heavy');
+      playSound(1200, 0.2);
+    }
+  }, [requiredFieldsCompleted]);
 
   // Field validation helpers
   const isFieldValid = (field: keyof typeof formData) => {
@@ -135,6 +213,41 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     );
   };
 
+  // Field Focus Particles
+  const FieldParticles = () => {
+    const particles = Array.from({ length: 8 }, (_, i) => ({
+      id: i,
+      angle: (i / 8) * 360,
+    }));
+
+    return (
+      <div className="absolute inset-0 pointer-events-none">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute w-1.5 h-1.5 rounded-full bg-thraiv-blue"
+            style={{
+              left: '50%',
+              top: '50%',
+            }}
+            animate={{
+              x: [0, Math.cos((particle.angle * Math.PI) / 180) * 30],
+              y: [0, Math.sin((particle.angle * Math.PI) / 180) * 30],
+              opacity: [0, 1, 0],
+              scale: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              delay: particle.id * 0.1,
+              ease: "easeOut"
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-md overflow-y-auto py-8" onClick={onClose}>
       {/* Animated Background Gradient Orbs */}
@@ -235,7 +348,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name Field */}
+                {/* Name Field - INSANE */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -247,15 +360,37 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     Your Name
                   </label>
                   <div className="relative">
+                    {/* Field Particles when focused */}
+                    {focusedField === 'name' && <FieldParticles />}
+
+                    {/* Dynamic Glow */}
+                    <motion.div
+                      className="absolute inset-0 rounded-xl blur-xl opacity-0"
+                      animate={{
+                        opacity: focusedField === 'name' ? [0.3, 0.6, 0.3] : 0,
+                        background: focusedField === 'name'
+                          ? ['rgba(38, 118, 255, 0.3)', 'rgba(124, 58, 237, 0.3)', 'rgba(38, 118, 255, 0.3)']
+                          : 'transparent'
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+
                     <input
                       type="text"
                       required
                       autoComplete="name"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
+                      onChange={(e) => {
+                        setFormData({ ...formData, name: e.target.value });
+                        if (e.target.value.length > 2 && !completedFields.has('name')) {
+                          celebrateFieldCompletion('name');
+                        }
+                      }}
+                      onFocus={() => setFocusedField('name')}
+                      onBlur={() => setFocusedField(null)}
+                      className="relative w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12 bg-white"
                       placeholder="John Smith"
-                      style={{ fontSize: '16px' }} // Prevent iOS zoom
+                      style={{ fontSize: '16px' }}
                     />
                     <AnimatePresence>
                       {isFieldValid('name') && (
@@ -263,7 +398,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           exit={{ scale: 0 }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 z-10"
                         >
                           <CheckCircle size={20} className="text-green-500" />
                         </motion.div>
@@ -513,16 +648,30 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="text-gray-600 text-base mb-8 max-w-md mx-auto"
+                className="text-gray-600 text-base mb-4 max-w-md mx-auto"
               >
-                We'll analyze your operations and show you exactly where you're leaking revenue.
+                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze your operations and show you exactly where you're leaking revenue.
               </motion.p>
+
+              {/* Important: Check Spam */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.65 }}
+                className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-8 max-w-md mx-auto"
+              >
+                <div className="flex items-center gap-2 justify-center text-sm font-bold text-yellow-800">
+                  <AlertTriangle size={16} />
+                  <span>Check your spam/junk folder!</span>
+                </div>
+                <p className="text-xs text-yellow-700 mt-1 text-center">Our confirmation email might land there</p>
+              </motion.div>
 
               {/* Timeline of Next Steps */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 0.75 }}
                 className="space-y-4 mb-8"
               >
                 <div className="flex items-start gap-4 text-left bg-blue-50 p-4 rounded-xl border border-blue-100">
@@ -530,7 +679,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     <Mail size={16} className="text-white" />
                   </div>
                   <div>
-                    <div className="font-bold text-thraiv-navy text-sm">Step 1: Check Your Inbox</div>
+                    <div className="font-bold text-thraiv-navy text-sm">Step 1: Check Your Inbox (& Spam!)</div>
                     <div className="text-xs text-gray-600 mt-1">Confirmation email sent within 2 minutes</div>
                   </div>
                 </div>
