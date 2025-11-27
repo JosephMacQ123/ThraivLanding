@@ -20,6 +20,8 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [completedFields, setCompletedFields] = useState<Set<string>>(new Set());
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = React.useRef<NodeJS.Timeout>();
 
   // Auto-save to localStorage
   useEffect(() => {
@@ -348,7 +350,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name Field - INSANE */}
+                {/* Name Field - OPTIMIZED */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -360,20 +362,10 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     Your Name
                   </label>
                   <div className="relative">
-                    {/* Field Particles when focused */}
-                    {focusedField === 'name' && <FieldParticles />}
-
-                    {/* Dynamic Glow */}
-                    <motion.div
-                      className="absolute inset-0 rounded-xl blur-xl opacity-0"
-                      animate={{
-                        opacity: focusedField === 'name' ? [0.3, 0.6, 0.3] : 0,
-                        background: focusedField === 'name'
-                          ? ['rgba(38, 118, 255, 0.3)', 'rgba(124, 58, 237, 0.3)', 'rgba(38, 118, 255, 0.3)']
-                          : 'transparent'
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
+                    {/* Subtle Glow - Only when focused AND not typing */}
+                    {focusedField === 'name' && !isTyping && (
+                      <div className="absolute inset-0 rounded-xl bg-blue-400/20 blur-xl" />
+                    )}
 
                     <input
                       type="text"
@@ -382,12 +374,29 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                       value={formData.name}
                       onChange={(e) => {
                         setFormData({ ...formData, name: e.target.value });
-                        if (e.target.value.length > 2 && !completedFields.has('name')) {
-                          celebrateFieldCompletion('name');
+                        setIsTyping(true);
+
+                        // Clear existing timeout
+                        if (typingTimeoutRef.current) {
+                          clearTimeout(typingTimeoutRef.current);
                         }
+
+                        // Set typing to false after 500ms of no typing
+                        typingTimeoutRef.current = setTimeout(() => {
+                          setIsTyping(false);
+                          if (e.target.value.length > 2 && !completedFields.has('name')) {
+                            celebrateFieldCompletion('name');
+                          }
+                        }, 500);
                       }}
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
+                      onFocus={() => {
+                        setFocusedField('name');
+                        setIsTyping(false);
+                      }}
+                      onBlur={() => {
+                        setFocusedField(null);
+                        setIsTyping(false);
+                      }}
                       className="relative w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12 bg-white"
                       placeholder="John Smith"
                       style={{ fontSize: '16px' }}
