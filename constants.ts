@@ -20,16 +20,6 @@ export const TRUST_POINTS = [
         icon: Award,
         label: "Best Result",
         value: "$1M to $6M (3 Years)"
-    },
-    {
-        icon: Zap,
-        label: "Response Speed",
-        value: "Under 2 Minutes"
-    },
-    {
-        icon: Briefcase,
-        label: "Built For",
-        value: "$1M-$50M Revenue"
     }
 ];
 

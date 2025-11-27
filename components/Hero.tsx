@@ -244,7 +244,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                 Fast Operations Win
               </span>
               <span className="block text-2xl md:text-3xl lg:text-4xl font-medium text-gray-600 leading-[1.4] max-w-3xl relative">
-                The Delays You Think Are Normal Are Costing You the Most
+                The delays you think are normal are the ones killing your growth
               </span>
             </motion.h1>
 

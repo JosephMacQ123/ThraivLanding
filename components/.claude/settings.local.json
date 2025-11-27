@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nWorld-class mobile UX optimization\n\n- Fix Hero animation overlapping scroll hint (increased bottom padding)\n- Optimize trust badges to 4 for perfect 2x2 mobile grid\n- Redesign pain section: 2-column mobile grid, larger text, better animations\n- Tighten white cards spacing and fix arrow visibility (z-index boost)\n- Set FAQ to start with all dropdowns closed (better UX)\n- Optimize mobile scroll rhythm across all sections (reduced padding)\n\nResult: Seamless mobile experience with engaging scroll rhythm and zero visual errors.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
