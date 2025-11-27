@@ -77,27 +77,20 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     }
   };
 
-  // Celebrate field completion
-  const celebrateFieldCompletion = (fieldName: string) => {
-    if (!completedFields.has(fieldName)) {
-      setCompletedFields(prev => new Set([...prev, fieldName]));
-      triggerHaptic('light');
-      playSound(800, 0.1);
-    }
-  };
-
-  // Milestone celebrations
+  // Milestone celebrations - AFTER validation helpers
   useEffect(() => {
-    const progress = requiredFieldsCompleted / totalRequiredFields;
-    if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
-      triggerHaptic('medium');
-      playSound(1000, 0.15);
+    if (requiredFieldsCompleted > 0) {
+      const progress = requiredFieldsCompleted / totalRequiredFields;
+      if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
+        triggerHaptic('medium');
+        playSound(1000, 0.15);
+      }
+      if (progress === 1) {
+        triggerHaptic('heavy');
+        playSound(1200, 0.2);
+      }
     }
-    if (progress === 1) {
-      triggerHaptic('heavy');
-      playSound(1200, 0.2);
-    }
-  }, [requiredFieldsCompleted]);
+  }, [requiredFieldsCompleted, totalRequiredFields]);
 
   // Field validation helpers
   const isFieldValid = (field: keyof typeof formData) => {
@@ -384,8 +377,11 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                         // Set typing to false after 500ms of no typing
                         typingTimeoutRef.current = setTimeout(() => {
                           setIsTyping(false);
+                          // Subtle haptic feedback when field is completed
                           if (e.target.value.length > 2 && !completedFields.has('name')) {
-                            celebrateFieldCompletion('name');
+                            setCompletedFields(prev => new Set([...prev, 'name']));
+                            triggerHaptic('light');
+                            playSound(800, 0.1);
                           }
                         }, 500);
                       }}
