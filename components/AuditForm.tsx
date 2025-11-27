@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, Loader } from 'lucide-react';
+import { ArrowRight, CheckCircle, Loader, X, User, Mail, Building2, Phone, Target, MessageSquare, Calendar, Clock, Sparkles, Zap } from 'lucide-react';
 
 interface AuditFormProps {
   onClose?: () => void;
@@ -11,147 +11,361 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     name: '',
     email: '',
     company: '',
-    revenue: ''
+    phone: '',
+    priority: '',
+    notes: ''
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  // Field validation helpers
+  const isFieldValid = (field: keyof typeof formData) => {
+    const value = formData[field];
+    if (!value) return false;
+    if (field === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    if (field === 'phone') return true; // Optional
+    if (field === 'notes') return true; // Optional
+    return value.length > 0;
+  };
+
+  const requiredFieldsCompleted = [
+    isFieldValid('name'),
+    isFieldValid('email'),
+    isFieldValid('company'),
+    isFieldValid('priority'),
+  ].filter(Boolean).length;
+
+  const totalRequiredFields = 4;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Send to webhook (user will configure this later)
-      const webhookUrl = process.env.WEBHOOK_URL || 'YOUR_WEBHOOK_URL_HERE';
+      // Send to n8n webhook
+      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook-test/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
 
       await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.phone || 'Not provided',
+          priority: formData.priority,
+          notes: formData.notes || 'No additional notes',
           timestamp: new Date().toISOString(),
-          source: 'landing_page'
+          source: 'thraiv_landing_page',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         })
       });
 
-      // Also send to email as backup
-      await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
       setSubmitted(true);
-      setTimeout(() => {
-        onClose?.();
-      }, 3000);
+      setShowConfetti(true);
+      // Don't auto-close - let them enjoy the success screen
     } catch (error) {
       console.error('Submission error:', error);
       // Still show success to user (form data is logged in console)
       setSubmitted(true);
+      setShowConfetti(true);
     } finally {
       setLoading(false);
     }
   };
 
+  // Confetti Component
+  const Confetti = () => {
+    const pieces = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.5,
+      duration: 2 + Math.random() * 2,
+      rotation: Math.random() * 360,
+    }));
+
+    return (
+      <div className="fixed inset-0 pointer-events-none z-50">
+        {pieces.map((piece) => (
+          <motion.div
+            key={piece.id}
+            className="absolute w-2 h-2 rounded-full"
+            style={{
+              left: `${piece.left}%`,
+              top: '-10%',
+              backgroundColor: ['#2676FF', '#7C3AED', '#EC4899', '#F59E0B', '#10B981'][piece.id % 5],
+            }}
+            initial={{ y: 0, opacity: 1, rotate: 0 }}
+            animate={{
+              y: window.innerHeight + 100,
+              opacity: [1, 1, 0],
+              rotate: piece.rotation,
+            }}
+            transition={{
+              duration: piece.duration,
+              delay: piece.delay,
+              ease: 'easeIn',
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-3xl p-8 md:p-12 max-w-2xl w-full relative shadow-2xl"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="bg-white rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button - Clean X */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group"
+        >
+          <X size={24} className="text-gray-400 group-hover:text-gray-600" />
+        </button>
+
+        {/* Confetti */}
+        {showConfetti && <Confetti />}
+
         <AnimatePresence mode="wait">
           {!submitted ? (
-            <motion.div key="form" exit={{ opacity: 0 }}>
-              <h2 className="text-3xl md:text-4xl font-bold text-thraiv-navy mb-4">
+            <motion.div key="form" exit={{ opacity: 0, y: -10 }}>
+              <h2 className="text-2xl md:text-3xl font-bold text-thraiv-navy mb-2">
                 Book Your Free Opportunity Audit
               </h2>
-              <p className="text-gray-600 mb-8 text-lg">
-                We'll diagnose your operational friction and show you exactly where you're losing revenue.
-                <span className="block mt-2 text-thraiv-blue font-bold">15 minutes. Zero cost. Zero pressure.</span>
+              <p className="text-gray-600 mb-6 text-sm">
+                15 minutes. Zero cost. Zero pressure.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-thraiv-blue focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    placeholder="John Smith"
+              {/* Progress Indicator */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    Progress
+                  </span>
+                  <span className="text-xs font-bold text-thraiv-blue">
+                    {requiredFieldsCompleted}/{totalRequiredFields} completed
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-thraiv-blue to-blue-600 rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(requiredFieldsCompleted / totalRequiredFields) * 100}%` }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                   />
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Work Email</label>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Name Field */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="relative"
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <User size={16} className="text-thraiv-blue" />
+                    Your Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      autoComplete="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
+                      placeholder="John Smith"
+                      style={{ fontSize: '16px' }} // Prevent iOS zoom
+                    />
+                    <AnimatePresence>
+                      {isFieldValid('name') && (
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          exit={{ scale: 0 }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2"
+                        >
+                          <CheckCircle size={20} className="text-green-500" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                {/* Email Field */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <Mail size={16} className="text-thraiv-blue" />
+                    Work Email
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      required
+                      autoComplete="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
+                      placeholder="john@company.com"
+                      style={{ fontSize: '16px' }}
+                    />
+                    <AnimatePresence>
+                      {isFieldValid('email') && (
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          exit={{ scale: 0 }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2"
+                        >
+                          <CheckCircle size={20} className="text-green-500" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                {/* Company Field */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <Building2 size={16} className="text-thraiv-blue" />
+                    Company
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      autoComplete="organization"
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
+                      placeholder="Acme Distribution Ltd"
+                      style={{ fontSize: '16px' }}
+                    />
+                    <AnimatePresence>
+                      {isFieldValid('company') && (
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          exit={{ scale: 0 }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2"
+                        >
+                          <CheckCircle size={20} className="text-green-500" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+                {/* Phone Field (Optional) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <Phone size={16} className="text-thraiv-blue" />
+                    Phone <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
                   <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-thraiv-blue focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    placeholder="john@company.com"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                    placeholder="+44 7700 900000"
                   />
-                </div>
+                </motion.div>
 
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Company Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-thraiv-blue focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    placeholder="Acme Distribution Ltd"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Annual Revenue</label>
+                {/* Priority Dropdown */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <Target size={16} className="text-thraiv-blue" />
+                    What do you want to improve first?
+                  </label>
                   <select
                     required
-                    value={formData.revenue}
-                    onChange={(e) => setFormData({ ...formData, revenue: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-thraiv-blue focus:ring-2 focus:ring-blue-100 outline-none transition-all bg-white"
+                    value={formData.priority}
+                    onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all bg-white appearance-none cursor-pointer"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232676FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 1rem center',
+                      backgroundSize: '1.25rem'
+                    }}
                   >
-                    <option value="">Select range...</option>
-                    <option value="1-5M">£1M - £5M</option>
-                    <option value="5-20M">£5M - £20M</option>
-                    <option value="20-50M">£20M - £50M</option>
-                    <option value="50M+">£50M+</option>
+                    <option value="">Select one...</option>
+                    <option value="Speed up RFQ/enquiry responses">Speed up RFQ/enquiry responses</option>
+                    <option value="Automate quoting">Automate quoting</option>
+                    <option value="Handle customer emails faster">Handle customer emails faster</option>
+                    <option value="Automate order/status updates">Automate order/status updates</option>
+                    <option value="Get visibility across operations">Get visibility across operations</option>
+                    <option value="Something else">Something else</option>
                   </select>
-                </div>
+                </motion.div>
 
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-700 font-bold hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="flex-1 px-6 py-4 rounded-xl bg-thraiv-blue text-white font-bold hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader size={20} className="animate-spin" />
-                        Booking...
-                      </>
-                    ) : (
-                      <>
-                        Book My Free Audit
-                        <ArrowRight size={20} />
-                      </>
-                    )}
-                  </button>
-                </div>
+                {/* Notes Field (Optional) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <MessageSquare size={16} className="text-thraiv-blue" />
+                    Anything else we should know? <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    rows={3}
+                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all resize-none"
+                    placeholder="Tell us about your biggest operational challenges..."
+                  />
+                </motion.div>
+
+                {/* Submit Button - Full Width */}
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  type="submit"
+                  disabled={loading}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-thraiv-blue to-blue-600 text-white font-bold hover:shadow-xl hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader size={20} className="animate-spin" />
+                      <span>Booking Your Audit...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Book My Free Audit</span>
+                      <ArrowRight size={20} />
+                    </>
+                  )}
+                </motion.button>
               </form>
             </motion.div>
           ) : (
@@ -159,19 +373,121 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-12"
+              className="text-center py-8"
             >
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle size={40} className="text-green-600" />
-              </div>
-              <h3 className="text-3xl font-bold text-thraiv-navy mb-4">
-                You're In!
-              </h3>
-              <p className="text-gray-600 text-lg">
-                We'll be in touch within 24 hours to schedule your Opportunity Audit.
-                <br />
-                Check your inbox for confirmation.
-              </p>
+              {/* Animated Success Checkmark */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                className="relative w-24 h-24 mx-auto mb-6"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [0, 1.2, 1] }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/50"
+                >
+                  <CheckCircle size={48} className="text-white" strokeWidth={3} />
+                </motion.div>
+                {/* Pulse rings */}
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-0 rounded-full border-4 border-green-400"
+                    initial={{ scale: 1, opacity: 0.6 }}
+                    animate={{ scale: [1, 2, 2.5], opacity: [0.6, 0.3, 0] }}
+                    transition={{
+                      duration: 2,
+                      delay: 0.4 + i * 0.4,
+                      repeat: Infinity,
+                      ease: "easeOut"
+                    }}
+                  />
+                ))}
+              </motion.div>
+
+              <motion.h3
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="text-3xl md:text-4xl font-black text-thraiv-navy mb-3"
+              >
+                You're In! 🎉
+              </motion.h3>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-gray-600 text-base mb-8 max-w-md mx-auto"
+              >
+                We'll analyze your operations and show you exactly where you're leaking revenue.
+              </motion.p>
+
+              {/* Timeline of Next Steps */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="space-y-4 mb-8"
+              >
+                <div className="flex items-start gap-4 text-left bg-blue-50 p-4 rounded-xl border border-blue-100">
+                  <div className="p-2 bg-thraiv-blue rounded-full flex-shrink-0">
+                    <Mail size={16} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-thraiv-navy text-sm">Step 1: Check Your Inbox</div>
+                    <div className="text-xs text-gray-600 mt-1">Confirmation email sent within 2 minutes</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 text-left bg-purple-50 p-4 rounded-xl border border-purple-100">
+                  <div className="p-2 bg-purple-600 rounded-full flex-shrink-0">
+                    <Calendar size={16} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-thraiv-navy text-sm">Step 2: We'll Reach Out</div>
+                    <div className="text-xs text-gray-600 mt-1">Within 24 hours to schedule your audit</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 text-left bg-green-50 p-4 rounded-xl border border-green-100">
+                  <div className="p-2 bg-green-600 rounded-full flex-shrink-0">
+                    <Zap size={16} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-thraiv-navy text-sm">Step 3: Get Your Roadmap</div>
+                    <div className="text-xs text-gray-600 mt-1">15-min call revealing your biggest opportunities</div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Social Proof */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-100 mb-6"
+              >
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Sparkles size={16} className="text-thraiv-blue" />
+                  <span className="text-sm font-bold text-thraiv-navy">Join 27 businesses growing faster</span>
+                </div>
+                <div className="text-2xl font-black text-thraiv-blue">2.4x Average Growth</div>
+                <div className="text-xs text-gray-600 mt-1">Since installing intelligent operations</div>
+              </motion.div>
+
+              {/* Close Button */}
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2 }}
+                onClick={onClose}
+                className="text-gray-500 hover:text-thraiv-navy font-medium text-sm transition-colors"
+              >
+                Close
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
