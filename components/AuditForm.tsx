@@ -276,7 +276,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 15 minutes. Zero cost. Zero pressure.
               </p>
 
-              {/* Compelling Value Proposition */}
+              {/* Compelling Value Proposition - Outcome Focused */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -284,21 +284,34 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 border-2 border-blue-100"
               >
                 <div className="text-center mb-3">
-                  <span className="text-xs font-black text-thraiv-blue uppercase tracking-wide">In This 15-Minute Audit, You'll Discover:</span>
+                  <span className="text-xs font-black text-thraiv-blue uppercase tracking-wide">You'll Get Your Custom Roadmap To:</span>
                 </div>
-                <div className="space-y-2 text-left">
+                <div className="space-y-2.5 text-left">
                   <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-xs font-medium text-gray-700">Exactly where you're leaking revenue</span>
+                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} className="text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-800">Find where you're losing revenue right now (and recapture it)</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-xs font-medium text-gray-700">Your biggest operational bottleneck</span>
+                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} className="text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-800">What bottlenecks you don't need to be dealing with (and eliminate them)</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-xs font-medium text-gray-700">3 quick wins you can implement immediately</span>
+                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
+                      <CheckCircle size={14} className="text-white" />
+                    </div>
+                    <span className="text-xs font-bold text-gray-800">3 things we can build to fix them (and free up your team)</span>
                   </div>
+                </div>
+
+                {/* Outcome Statement */}
+                <div className="mt-4 bg-white/80 rounded-lg p-3 border border-blue-200">
+                  <p className="text-xs text-center font-black text-thraiv-navy leading-relaxed">
+                    Find out exactly what to do to solve your problems and create value.
+                  </p>
                 </div>
 
                 {/* Social Proof + Trust Signals */}
@@ -318,6 +331,19 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                       <span>100% free</span>
                     </div>
                   </div>
+                </div>
+              </motion.div>
+
+              {/* Urgency */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+                className="mb-6 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 rounded-xl p-3"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Zap size={16} className="text-orange-600" />
+                  <span className="text-xs font-black text-orange-900">Only 5 audit spots available this week</span>
                 </div>
               </motion.div>
 
@@ -594,7 +620,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     ) : (
                       <>
                         <Sparkles size={20} className="relative z-10 group-hover:rotate-12 transition-transform" />
-                        <span className="relative z-10">Book My Free Audit</span>
+                        <span className="relative z-10">Show Me My Opportunities</span>
                         <ArrowRight size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
