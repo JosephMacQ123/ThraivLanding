@@ -83,6 +83,14 @@ export default function App() {
     restDelta: 0.001
   });
 
+  const handleOpenForm = () => {
+    console.log('🎯 Button clicked! Opening form...');
+    setShowAuditForm(true);
+    console.log('📝 showAuditForm set to:', true);
+  };
+
+  console.log('🔍 Current showAuditForm state:', showAuditForm);
+
   return (
     <div className="antialiased text-thraiv-navy bg-white selection:bg-thraiv-blue selection:text-white">
       {/* Scroll Progress Bar */}
@@ -91,10 +99,10 @@ export default function App() {
         style={{ scaleX }}
       />
 
-      <Navbar onBookAudit={() => setShowAuditForm(true)} />
-      
+      <Navbar onBookAudit={handleOpenForm} />
+
       <main>
-        <Hero onBookAudit={() => setShowAuditForm(true)} />
+        <Hero onBookAudit={handleOpenForm} />
         <TrustBar />
         <PainSection />
         <SectionTransition text="" theme="light" />
@@ -112,7 +120,7 @@ export default function App() {
         <FAQSection />
         <SectionTransition text="" theme="light" />
         <UrgencySection />
-        <AuditSection onBookAudit={() => setShowAuditForm(true)} />
+        <AuditSection onBookAudit={handleOpenForm} />
       </main>
 
       <Footer />
