@@ -77,21 +77,6 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     }
   };
 
-  // Milestone celebrations - AFTER validation helpers
-  useEffect(() => {
-    if (requiredFieldsCompleted > 0) {
-      const progress = requiredFieldsCompleted / totalRequiredFields;
-      if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
-        triggerHaptic('medium');
-        playSound(1000, 0.15);
-      }
-      if (progress === 1) {
-        triggerHaptic('heavy');
-        playSound(1200, 0.2);
-      }
-    }
-  }, [requiredFieldsCompleted, totalRequiredFields]);
-
   // Field validation helpers
   const isFieldValid = (field: keyof typeof formData) => {
     const value = formData[field];
@@ -110,6 +95,21 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   ].filter(Boolean).length;
 
   const totalRequiredFields = 4;
+
+  // Milestone celebrations - NOW in correct position after variables are defined
+  useEffect(() => {
+    if (requiredFieldsCompleted > 0) {
+      const progress = requiredFieldsCompleted / totalRequiredFields;
+      if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
+        triggerHaptic('medium');
+        playSound(1000, 0.15);
+      }
+      if (progress === 1) {
+        triggerHaptic('heavy');
+        playSound(1200, 0.2);
+      }
+    }
+  }, [requiredFieldsCompleted, totalRequiredFields]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
