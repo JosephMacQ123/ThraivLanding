@@ -10,7 +10,7 @@ export const VisionSection: React.FC = () => {
     },
     {
       before: { icon: Search, text: "Chasing info constantly", subtext: "Hours hunting data" },
-      after: { icon: BarChart3, text: "Data tracked 24/7", subtext: "Informed the moment it matters" }
+      after: { icon: BarChart3, text: "Data tracked 24/7", subtext: "Informed the moment the things that matter change" }
     },
     {
       before: { icon: AlertTriangle, text: "Firefighting through inbox", subtext: "Reactive & overwhelmed" },
