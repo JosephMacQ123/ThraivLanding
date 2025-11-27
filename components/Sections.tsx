@@ -604,7 +604,7 @@ export const HowItWorksSection: React.FC = () => {
 
                  {/* Visual Grid for Desktop */}
                  <div className="relative max-w-7xl mx-auto">
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-y-16">
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-x-8 lg:gap-y-20">
                         {COPY.HOW_IT_WORKS.map((step, i) => (
                             <motion.div
                                 key={i}
@@ -612,6 +612,7 @@ export const HowItWorksSection: React.FC = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
                                 className="h-full relative group"
+                                style={{ zIndex: 5 - i }}
                             >
                                 {/* Flow Connector Arrows - PROMINENT - Higher z-index */}
                                 {i < 4 && (
