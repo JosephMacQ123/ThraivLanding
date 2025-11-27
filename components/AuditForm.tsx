@@ -609,17 +609,26 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="text-gray-600 text-base mb-4 max-w-md mx-auto"
+                className="text-gray-600 text-base mb-6 max-w-md mx-auto leading-relaxed"
               >
-                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze your operations and show you exactly where you're leaking revenue.
+                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze {formData.priority ? `your ${formData.priority.toLowerCase()}` : 'your current problems'} and get back to you ASAP with next steps.
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.65 }}
+                className="text-gray-700 font-medium text-sm mb-6 max-w-md mx-auto"
+              >
+                We'll contact you within a few minutes to start the conversation and book in your call.
               </motion.p>
 
               {/* Important: Check Spam */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.65 }}
-                className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-8 max-w-md mx-auto"
+                transition={{ delay: 0.7 }}
+                className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-6 max-w-md mx-auto"
               >
                 <div className="flex items-center gap-2 justify-center text-sm font-bold text-yellow-800">
                   <AlertTriangle size={16} />
@@ -628,40 +637,77 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 <p className="text-xs text-yellow-700 mt-1 text-center">Our confirmation email might land there</p>
               </motion.div>
 
-              {/* Timeline of Next Steps */}
+              {/* While You Wait - YouTube */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75 }}
+                className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-100 rounded-xl p-4 mb-8 max-w-md mx-auto"
+              >
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Sparkles size={16} className="text-red-600" />
+                  <span className="text-sm font-bold text-gray-800">While You Wait</span>
+                </div>
+                <p className="text-xs text-gray-600 mb-3">See how we help businesses like yours move faster</p>
+                <a
+                  href="https://www.youtube.com/@Joseph.Thraiv"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition-all hover:scale-105 active:scale-95"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  Watch Our Channel
+                </a>
+              </motion.div>
+
+              {/* What Happens Next - Clear Step by Step */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.75 }}
-                className="space-y-4 mb-8"
+                transition={{ delay: 0.8 }}
+                className="space-y-3 mb-8"
               >
-                <div className="flex items-start gap-4 text-left bg-blue-50 p-4 rounded-xl border border-blue-100">
-                  <div className="p-2 bg-thraiv-blue rounded-full flex-shrink-0">
-                    <Mail size={16} className="text-white" />
+                <h4 className="text-sm font-bold text-gray-800 mb-4 text-center">Here's Exactly What Happens Next:</h4>
+
+                <div className="flex items-start gap-3 text-left bg-blue-50 p-3.5 rounded-xl border border-blue-100">
+                  <div className="flex items-center justify-center w-6 h-6 bg-thraiv-blue rounded-full flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-black">1</span>
                   </div>
-                  <div>
-                    <div className="font-bold text-thraiv-navy text-sm">Step 1: Check Your Inbox (& Spam!)</div>
-                    <div className="text-xs text-gray-600 mt-1">Confirmation email sent within 2 minutes</div>
+                  <div className="flex-1">
+                    <div className="font-black text-thraiv-navy text-sm">Confirmation Email Arrives</div>
+                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">Check your inbox (and spam!) in the next 2 minutes</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 text-left bg-purple-50 p-4 rounded-xl border border-purple-100">
-                  <div className="p-2 bg-purple-600 rounded-full flex-shrink-0">
-                    <Calendar size={16} className="text-white" />
+                <div className="flex items-start gap-3 text-left bg-purple-50 p-3.5 rounded-xl border border-purple-100">
+                  <div className="flex items-center justify-center w-6 h-6 bg-purple-600 rounded-full flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-black">2</span>
                   </div>
-                  <div>
-                    <div className="font-bold text-thraiv-navy text-sm">Step 2: We'll Reach Out</div>
-                    <div className="text-xs text-gray-600 mt-1">Within 24 hours to schedule your audit</div>
+                  <div className="flex-1">
+                    <div className="font-black text-thraiv-navy text-sm">We Analyze {formData.priority ? `Your ${formData.priority}` : 'Your Operations'}</div>
+                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We identify your quick wins, bottlenecks, and biggest opportunities</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 text-left bg-green-50 p-4 rounded-xl border border-green-100">
-                  <div className="p-2 bg-green-600 rounded-full flex-shrink-0">
-                    <Zap size={16} className="text-white" />
+                <div className="flex items-start gap-3 text-left bg-green-50 p-3.5 rounded-xl border border-green-100">
+                  <div className="flex items-center justify-center w-6 h-6 bg-green-600 rounded-full flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-black">3</span>
                   </div>
-                  <div>
-                    <div className="font-bold text-thraiv-navy text-sm">Step 3: Get Your Roadmap</div>
-                    <div className="text-xs text-gray-600 mt-1">15-min call revealing your biggest opportunities</div>
+                  <div className="flex-1">
+                    <div className="font-black text-thraiv-navy text-sm">We Contact You Within A Few Minutes</div>
+                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We'll reach out via email/call to start the conversation</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 text-left bg-orange-50 p-3.5 rounded-xl border border-orange-100">
+                  <div className="flex items-center justify-center w-6 h-6 bg-orange-600 rounded-full flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-black">4</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-black text-thraiv-navy text-sm">Book In Your Call</div>
+                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">Schedule your 15-minute audit and get your custom roadmap</div>
                   </div>
                 </div>
               </motion.div>
