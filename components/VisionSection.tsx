@@ -6,7 +6,7 @@ export const VisionSection: React.FC = () => {
   const comparisons = [
     {
       before: { icon: Mail, text: "Buried in emails", subtext: "Leads sitting unnoticed" },
-      after: { icon: Zap, text: "RFQs engaged instantly", subtext: "Automatic capture & response" }
+      after: { icon: Zap, text: "RFQs & Leads engaged instantly", subtext: "Automatic capture & response" }
     },
     {
       before: { icon: Search, text: "Chasing info constantly", subtext: "Hours hunting data" },
@@ -22,8 +22,11 @@ export const VisionSection: React.FC = () => {
     }
   ];
 
+  // Show only first 2 on mobile for faster scroll
+  const mobileComparisons = comparisons.slice(0, 2);
+
   return (
-    <section className="relative py-16 md:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
+    <section className="relative py-10 md:py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
       {/* Subtle background effects */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-transparent pointer-events-none" />
 
@@ -34,12 +37,12 @@ export const VisionSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-8 md:mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-black text-thraiv-navy mb-4">
+          <h2 className="text-2xl md:text-5xl font-black text-thraiv-navy mb-3 md:mb-4">
             Imagine a Business Where...
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
             This isn't a dream. It's what intelligent operations look like.
           </p>
         </motion.div>
@@ -72,8 +75,8 @@ export const VisionSection: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Comparison Pairs */}
-          <div className="space-y-6 md:space-y-8">
+          {/* Comparison Pairs - Desktop: All 4, Mobile: First 2 only */}
+          <div className="space-y-4 md:space-y-8">
             {comparisons.map((comparison, index) => (
               <motion.div
                 key={index}
@@ -81,7 +84,7 @@ export const VisionSection: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative"
+                className={`relative ${index >= 2 ? 'hidden md:block' : ''}`}
               >
                 {/* Desktop: Side by side */}
                 <div className="hidden md:grid md:grid-cols-2 gap-8">
@@ -134,17 +137,17 @@ export const VisionSection: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Mobile: Stacked with transform arrow */}
-                <div className="md:hidden space-y-4">
+                {/* Mobile: Stacked with transform arrow - Tighter spacing for faster scroll */}
+                <div className="md:hidden space-y-3">
                   {/* Mobile Header for this pair */}
                   <div className="text-center">
-                    <span className="inline-block px-4 py-2 bg-red-50 border border-red-200 rounded-full text-xs font-bold text-red-700">
+                    <span className="inline-block px-4 py-1.5 bg-red-50 border border-red-200 rounded-full text-xs font-bold text-red-700">
                       Your Business Today
                     </span>
                   </div>
 
                   {/* BEFORE */}
-                  <div className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200/60 rounded-2xl p-5">
+                  <div className="bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200/60 rounded-2xl p-4">
                     <div className="flex items-start gap-3">
                       <div className="p-2.5 bg-red-100 rounded-xl text-red-600 flex-shrink-0">
                         <comparison.before.icon size={20} />
@@ -156,27 +159,27 @@ export const VisionSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Transform Arrow */}
-                  <div className="flex justify-center">
+                  {/* Transform Arrow - Smaller and tighter */}
+                  <div className="flex justify-center -my-1">
                     <motion.div
-                      animate={{ y: [0, 8, 0] }}
+                      animate={{ y: [0, 6, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg"
+                      className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg"
                     >
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                       </svg>
                     </motion.div>
                   </div>
 
                   <div className="text-center">
-                    <span className="inline-block px-4 py-2 bg-green-50 border border-green-200 rounded-full text-xs font-bold text-green-700">
+                    <span className="inline-block px-4 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs font-bold text-green-700">
                       With Intelligent Operations
                     </span>
                   </div>
 
                   {/* AFTER */}
-                  <div className="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-200/60 rounded-2xl p-5 relative">
+                  <div className="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-200/60 rounded-2xl p-4 relative">
                     <div className="flex items-start gap-3">
                       <div className="p-2.5 bg-green-100 rounded-xl text-green-600 flex-shrink-0">
                         <comparison.after.icon size={20} />
@@ -186,7 +189,7 @@ export const VisionSection: React.FC = () => {
                         <p className="text-xs text-gray-600">{comparison.after.subtext}</p>
                       </div>
                     </div>
-                    <div className="absolute top-4 right-4 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="absolute top-3 right-3 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
                       <CheckCircle size={16} className="text-white" strokeWidth={3} />
                     </div>
                   </div>
@@ -207,18 +210,18 @@ export const VisionSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-12 md:mt-16"
+          className="text-center mt-8 md:mt-16"
         >
-          <p className="text-xl md:text-2xl font-bold text-gray-700 mb-2">
+          <p className="text-lg md:text-2xl font-bold text-gray-700 mb-2">
             This isn't magic. It's systems.
           </p>
           <motion.p
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="text-base text-gray-500 flex items-center justify-center gap-2"
+            className="text-sm md:text-base text-gray-500 flex items-center justify-center gap-2"
           >
             Keep scrolling to see how
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </motion.p>

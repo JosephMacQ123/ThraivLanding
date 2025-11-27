@@ -35,7 +35,7 @@ export const COPY = {
     INSIGHT_INTRO: "This isn't a people problem.",
     INSIGHT_MAIN: "It's a systems problem. And systems are what make your operations work, react, and solve problems faster than anyone else.",
     CTA: "Book Free Opportunity Audit",
-    CTA_SUBTEXT: "15 minutes Zero cost See exactly where you're leaking revenue"
+    CTA_SUBTEXT: "15 minutes • Zero cost • See exactly where you're leaking revenue"
   },
   PAIN: {
     HEADLINE: "These Are The Delays:",
