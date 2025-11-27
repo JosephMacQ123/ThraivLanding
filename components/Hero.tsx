@@ -40,21 +40,21 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
-  const [phase, setPhase] = useState<0 | 1 | 2>(0); // 0: Capture, 1: Automate, 2: Insight
+  const [phase, setPhase] = useState<0 | 1>(0); // 0: Watch, 1: Act
   const [isPaused, setIsPaused] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
 
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
-      setPhase((prev) => (prev + 1) % 3 as 0 | 1 | 2);
-    }, 5000); 
+      setPhase((prev) => (prev + 1) % 2 as 0 | 1);
+    }, 4000);
     return () => clearInterval(timer);
   }, [isPaused]);
 
-  const handlePhaseClick = (newPhase: 0 | 1 | 2) => {
+  const handlePhaseClick = (newPhase: 0 | 1) => {
     setPhase(newPhase);
-    setIsPaused(true); 
+    setIsPaused(true);
   };
 
   return (
@@ -273,21 +273,6 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
               <p className="text-gray-600 text-base md:text-lg font-medium">
                 {COPY.HERO.CTA_SUBTEXT}
               </p>
-
-              {/* Social Proof at CTA */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="flex items-center gap-2 text-sm text-gray-500 pt-2"
-              >
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 border-2 border-white flex items-center justify-center text-xs font-bold text-blue-600">27</div>
-                </div>
-                <span className="font-medium">
-                  businesses growing <span className="text-thraiv-navy font-bold">2.4x faster</span>
-                </span>
-              </motion.div>
             </motion.div>
           </motion.div>
         </div>
@@ -333,11 +318,11 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
             {/* Dynamic Content Area */}
             <div className="relative h-[300px] lg:h-[380px]">
               <AnimatePresence mode="wait">
-                
-                {/* PHASE 1: CAPTURE (SPEED) */}
+
+                {/* PHASE 0: WATCH - What We're Monitoring */}
                 {phase === 0 && (
                   <motion.div
-                    key="capture"
+                    key="watch"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -345,160 +330,162 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   >
                     <div className="text-center mb-6">
                       <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Watches Everything</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">Every signal captured the moment it happens</p>
+                      <p className="text-sm md:text-base text-gray-500 font-medium">Every email, RFQ, order, and data change monitored 24/7</p>
                     </div>
 
                     <div className="relative flex-1">
-                      {/* Central Hub */}
-                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                        <motion.div 
-                          animate={{ scale: [1, 1.1, 1], boxShadow: ["0 0 0 0px rgba(38, 118, 255, 0.2)", "0 0 0 20px rgba(38, 118, 255, 0)", "0 0 0 0px rgba(38, 118, 255, 0)"] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                          className="w-20 h-20 bg-thraiv-blue rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/30"
+                      {/* Simplified: Show 3 signals being detected */}
+                      <div className="space-y-4">
+                        <motion.div
+                          initial={{ x: -50, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0 }}
+                          className="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 flex items-center gap-4"
                         >
-                          <Layers size={32} />
+                          <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
+                            <Mail size={24} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-bold text-gray-800">New Lead Email</div>
+                            <div className="text-sm text-gray-500">Detected in inbox • High priority</div>
+                          </div>
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                            className="w-3 h-3 bg-blue-500 rounded-full"
+                          />
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ x: -50, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                          className="bg-gradient-to-r from-purple-50 to-white p-4 rounded-xl shadow-md border-l-4 border-purple-500 flex items-center gap-4"
+                        >
+                          <div className="p-3 bg-purple-100 rounded-lg text-purple-600">
+                            <FileText size={24} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-bold text-gray-800">RFQ Received</div>
+                            <div className="text-sm text-gray-500">Request #902 • Needs quote</div>
+                          </div>
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
+                            className="w-3 h-3 bg-purple-500 rounded-full"
+                          />
+                        </motion.div>
+
+                        <motion.div
+                          initial={{ x: -50, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 0.4 }}
+                          className="bg-gradient-to-r from-orange-50 to-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex items-center gap-4"
+                        >
+                          <div className="p-3 bg-orange-100 rounded-lg text-orange-600">
+                            <Package size={24} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-bold text-gray-800">Order Status Change</div>
+                            <div className="text-sm text-gray-500">Shipment delayed • Customer needs alert</div>
+                          </div>
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
+                            className="w-3 h-3 bg-orange-500 rounded-full"
+                          />
                         </motion.div>
                       </div>
-
-                      {/* Inputs flying in - SLOWED DOWN & LARGER */}
-                      <motion.div 
-                        className="absolute top-4 left-0" 
-                        animate={{ x: [0, 100], y: [0, 80], opacity: [0, 1, 0], scale: [1.2, 0.8, 0] }} 
-                        transition={{ duration: 4, repeat: Infinity, delay: 0, ease: "easeInOut" }}
-                      >
-                        <div className="bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 transform scale-110">
-                           <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Mail size={24} /></div>
-                           <span className="text-sm font-bold text-gray-800">New Lead</span>
-                        </div>
-                      </motion.div>
-                      
-                      <motion.div 
-                        className="absolute top-1/2 left-[-20px]" 
-                        animate={{ x: [0, 120], opacity: [0, 1, 0], scale: [1.2, 0.8, 0] }} 
-                        transition={{ duration: 4.5, repeat: Infinity, delay: 1, ease: "easeInOut" }}
-                      >
-                         <div className="bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 transform scale-110">
-                           <div className="p-2 bg-purple-100 rounded-lg text-purple-600"><FileText size={24} /></div>
-                           <span className="text-sm font-bold text-gray-800">RFQ #902</span>
-                        </div>
-                      </motion.div>
-
-                      <motion.div 
-                        className="absolute bottom-4 left-0" 
-                        animate={{ x: [0, 100], y: [0, -80], opacity: [0, 1, 0], scale: [1.2, 0.8, 0] }} 
-                        transition={{ duration: 3.8, repeat: Infinity, delay: 2.2, ease: "easeInOut" }}
-                      >
-                         <div className="bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 transform scale-110">
-                           <div className="p-2 bg-orange-100 rounded-lg text-orange-600"><Package size={24} /></div>
-                           <span className="text-sm font-bold text-gray-800">New Order</span>
-                        </div>
-                      </motion.div>
-
-                       {/* Processed Outputs fading out right */}
-                       <motion.div className="absolute top-10 right-0" animate={{ x: [0, 50], opacity: [0, 1, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }}>
-                          <div className="text-xs text-green-600 font-bold flex items-center gap-1"><CheckCircle size={12} /> Captured</div>
-                       </motion.div>
                     </div>
 
                     <div className="mt-auto bg-gray-50 rounded-xl p-3 flex justify-between items-center border border-gray-100">
                        <span className="text-xs font-medium text-gray-500">System Status</span>
-                       <span className="text-sm font-bold text-thraiv-blue flex items-center gap-2">
-                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"/> All Inputs Active
+                       <span className="text-sm font-bold text-green-600 flex items-center gap-2">
+                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"/> All Signals Active
                        </span>
                     </div>
                   </motion.div>
                 )}
 
-                {/* PHASE 2: AUTOMATE (TRUST) */}
+                {/* PHASE 1: ACT - How We Respond */}
                 {phase === 1 && (
                   <motion.div
-                    key="automate"
+                    key="act"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 flex flex-col"
                   >
                      <div className="text-center mb-4">
-                      <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Works For You</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">Quotes drafted, emails sent, questions answered, leads engaged, tasks complete</p>
+                      <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Acts Instantly</h3>
+                      <p className="text-sm md:text-base text-gray-500 font-medium">Automated responses, quotes, and alerts in seconds</p>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto px-1">
-                      <FlowItem icon={FileText} label="Auto-Quote Generated" status="Sent to Customer (2s)" delay={0} />
-                      <FlowItem icon={Mail} label="Order Confirmation" status="Emailed to John D." delay={0.2} />
-                      <FlowItem icon={Search} label="Stock Check" status="Inventory Reserved" delay={0.4} />
-                      <FlowItem icon={MessageSquare} label="Lead Response" status="Meeting Link Sent" delay={0.6} />
+                    <div className="flex-1 space-y-3">
+                      <motion.div
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0 }}
+                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                      >
+                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={24} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-gray-800">Lead Auto-Responded</div>
+                          <div className="text-sm text-gray-500">Meeting link sent • 2.1 seconds</div>
+                        </div>
+                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                      >
+                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={24} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-gray-800">Quote Generated</div>
+                          <div className="text-sm text-gray-500">RFQ #902 priced • Ready for review</div>
+                        </div>
+                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                      </motion.div>
+
+                      <motion.div
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                      >
+                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={24} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-gray-800">Customer Notified</div>
+                          <div className="text-sm text-gray-500">Delay alert sent • Proactive update</div>
+                        </div>
+                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                      </motion.div>
                     </div>
 
-                    <motion.div 
-                      className="mt-4 bg-thraiv-navy text-white p-4 rounded-xl flex items-center justify-between shadow-lg cursor-help"
-                      onMouseEnter={() => setActiveTooltip("saved")}
-                      onMouseLeave={() => setActiveTooltip(null)}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                      className="mt-auto bg-thraiv-navy text-white p-4 rounded-xl flex items-center justify-between shadow-lg"
                     >
-                       {activeTooltip === "saved" && <Tooltip text="Hours returned to your team this week" />}
                        <div className="flex items-center gap-3">
                           <div className="p-2 bg-white/10 rounded-lg"><Clock size={20} className="text-blue-300" /></div>
                           <div>
-                            <div className="text-xs text-gray-400 uppercase">Admin Time Saved</div>
+                            <div className="text-xs text-gray-400 uppercase">Time Saved Today</div>
                             <div className="font-bold text-lg">14.5 Hours</div>
                           </div>
                        </div>
-                       <div className="text-green-400 text-sm font-bold">+12% vs last week</div>
+                       <div className="text-green-400 text-sm font-bold">+12%</div>
                     </motion.div>
-                  </motion.div>
-                )}
-
-                {/* PHASE 3: INSIGHT (VISIBILITY/DELAY) */}
-                {phase === 2 && (
-                  <motion.div
-                    key="insight"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute inset-0 flex flex-col"
-                  >
-                    <div className="text-center mb-6">
-                      <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Surfaces Insights</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">See problems instantly Act before they cost you One source of truth</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm text-center">
-                           <div className="text-gray-400 text-xs uppercase mb-1">Avg Response</div>
-                           <div className="text-2xl font-bold text-thraiv-navy">4.2m</div>
-                           <div className="text-xs text-green-500 flex justify-center items-center gap-1">
-                             <Zap size={10} /> Top 1%
-                           </div>
-                        </div>
-                        <div className="bg-white border border-gray-100 p-4 rounded-xl shadow-sm text-center">
-                           <div className="text-gray-400 text-xs uppercase mb-1">Order Accuracy</div>
-                           <div className="text-2xl font-bold text-thraiv-navy">99.8%</div>
-                           <div className="text-xs text-blue-500">System Verified</div>
-                        </div>
-                    </div>
-
-                    <motion.div 
-                       initial={{ scale: 0.9, opacity: 0 }}
-                       animate={{ scale: 1, opacity: 1 }}
-                       transition={{ delay: 0.5 }}
-                       className="bg-red-50 border border-red-100 p-4 rounded-xl flex items-center gap-4 mb-4"
-                    >
-                        <div className="p-2 bg-white rounded-full text-red-500 shadow-sm">
-                           <AlertTriangle size={20} />
-                        </div>
-                        <div className="flex-1">
-                           <div className="font-bold text-red-900 text-sm">Bottleneck Detected</div>
-                           <div className="text-xs text-red-600">Quote #2291 pending approval &gt; 4 hours.</div>
-                        </div>
-                        <button className="text-xs bg-white border border-red-200 text-red-600 px-3 py-1.5 rounded-lg font-medium hover:bg-red-50">
-                           Nudge
-                        </button>
-                    </motion.div>
-
-                    <div className="mt-auto bg-gray-50 p-3 rounded-xl border border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                       <span className="flex items-center gap-2"><BarChart3 size={14} /> Live Analytics</span>
-                       <span>Updated: Just now</span>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -506,29 +493,28 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
             
             {/* Interactive Control Panel */}
             <div className="mt-6 border-t border-gray-100 pt-4">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Watches", sub: "Speed", icon: <Layers size={14} />, color: "bg-blue-500" },
-                  { label: "Works", sub: "Growth", icon: <Zap size={14} />, color: "bg-purple-500" },
-                  { label: "Surfaces", sub: "Insights", icon: <BarChart3 size={14} />, color: "bg-green-500" },
+                  { label: "Watch", sub: "Signals", icon: <Search size={16} />, color: "bg-blue-500" },
+                  { label: "Act", sub: "Instantly", icon: <Zap size={16} />, color: "bg-green-500" },
                 ].map((item, i) => (
                   <button
                     key={i}
-                    onClick={() => handlePhaseClick(i as 0 | 1 | 2)}
-                    className={`relative p-2 rounded-xl text-left transition-all duration-300 group overflow-hidden
-                      ${phase === i ? 'bg-gray-50 ring-1 ring-gray-200' : 'hover:bg-gray-50'}
+                    onClick={() => handlePhaseClick(i as 0 | 1)}
+                    className={`relative p-3 rounded-xl text-left transition-all duration-300 group overflow-hidden
+                      ${phase === i ? 'bg-gray-50 ring-2 ring-thraiv-blue' : 'hover:bg-gray-50'}
                     `}
                   >
                     <div className="flex items-center gap-2 mb-1 relative z-10">
                        <span className={`${phase === i ? 'text-thraiv-blue' : 'text-gray-400'}`}>{item.icon}</span>
-                       <span className={`text-xs font-bold uppercase tracking-wider ${phase === i ? 'text-gray-900' : 'text-gray-400'}`}>{item.label}</span>
+                       <span className={`text-sm font-bold uppercase tracking-wider ${phase === i ? 'text-gray-900' : 'text-gray-400'}`}>{item.label}</span>
                     </div>
-                    <div className={`text-[10px] pl-6 ${phase === i ? 'text-gray-500' : 'text-gray-300'}`}>{item.sub}</div>
-                    
+                    <div className={`text-xs pl-7 ${phase === i ? 'text-gray-500' : 'text-gray-300'}`}>{item.sub}</div>
+
                     {phase === i && (
-                      <motion.div 
+                      <motion.div
                         layoutId="activeIndicator"
-                        className={`absolute bottom-0 left-0 h-0.5 w-full ${item.color}`} 
+                        className={`absolute bottom-0 left-0 h-1 w-full ${item.color}`}
                       />
                     )}
                   </button>

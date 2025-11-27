@@ -6,19 +6,19 @@ export const VisionSection: React.FC = () => {
   const comparisons = [
     {
       before: { icon: Mail, text: "Buried in emails", subtext: "Leads sitting unnoticed" },
-      after: { icon: Zap, text: "RFQs & Leads engaged instantly", subtext: "Automatic capture & response" }
+      after: { icon: Zap, text: "RFQs & Leads engaged instantly", subtext: "Automatic capture & response", stat: "< 5 min avg" }
     },
     {
       before: { icon: Search, text: "Chasing info constantly", subtext: "Hours hunting data" },
-      after: { icon: BarChart3, text: "Data tracked 24/7", subtext: "Informed the moment the things that matter change" }
+      after: { icon: BarChart3, text: "Data tracked 24/7", subtext: "Informed the moment the things that matter change", stat: "Real-time" }
     },
     {
       before: { icon: AlertTriangle, text: "Firefighting through inbox", subtext: "Reactive & overwhelmed" },
-      after: { icon: CheckCircle, text: "No repetitive questions", subtext: "Everyone knows their role" }
+      after: { icon: CheckCircle, text: "No repetitive questions", subtext: "Everyone knows their role", stat: "85% reduction" }
     },
     {
       before: { icon: Clock, text: "Hours lost to manual tasks", subtext: "Typing, checking, switching" },
-      after: { icon: Target, text: "No time lost", subtext: "Systems handle the admin" }
+      after: { icon: Target, text: "No time lost", subtext: "Systems handle the admin", stat: "15hrs/week saved" }
     }
   ];
 
@@ -115,13 +115,19 @@ export const VisionSection: React.FC = () => {
                     style={{ willChange: 'transform' }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-green-100/0 to-green-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="relative z-10 flex items-start gap-4">
+                    <div className="relative z-10 flex items-start gap-4 mb-3">
                       <div className="p-3 bg-green-100 rounded-xl text-green-600 flex-shrink-0">
                         <comparison.after.icon size={24} />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-black text-gray-800 mb-1">{comparison.after.text}</h3>
                         <p className="text-sm text-gray-600">{comparison.after.subtext}</p>
+                      </div>
+                    </div>
+                    {/* Micro-stat */}
+                    <div className="relative z-10 pl-16">
+                      <div className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                        {comparison.after.stat}
                       </div>
                     </div>
                     {/* Checkmark badge */}
@@ -180,13 +186,19 @@ export const VisionSection: React.FC = () => {
 
                   {/* AFTER */}
                   <div className="bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-200/60 rounded-2xl p-4 relative">
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-3 mb-2">
                       <div className="p-2.5 bg-green-100 rounded-xl text-green-600 flex-shrink-0">
                         <comparison.after.icon size={20} />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-base font-black text-gray-800 mb-1">{comparison.after.text}</h3>
                         <p className="text-xs text-gray-600">{comparison.after.subtext}</p>
+                      </div>
+                    </div>
+                    {/* Micro-stat */}
+                    <div className="pl-12">
+                      <div className="inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">
+                        {comparison.after.stat}
                       </div>
                     </div>
                     <div className="absolute top-3 right-3 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-lg">

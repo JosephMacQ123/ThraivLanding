@@ -79,10 +79,8 @@ export const COPY = {
       COLOR: "#EF4444",
       EXAMPLES: [
         "Emails Sitting Unseen",
-        "Data Changes With No Alert",
         "Customer Waiting For Answers",
         "Tasks Lost in Busy Inboxes",
-        "Issues Raised But Not Spotted",
         "Critical Work Hidden in Noise"
       ]
     },
@@ -93,11 +91,9 @@ export const COPY = {
       PERCENTAGE: 85,
       COLOR: "#DC2626",
       EXAMPLES: [
-        "Chasing Someone For Information",
         "Manual Admin To Build Quotes, Reports & Updates",
         "Copy-Pasting Between Systems",
         "Rewriting the Same Emails Again",
-        "Searching For Missing Details",
         "Switching Between 6 to 10 Tools To Finish One Task"
       ]
     },
@@ -324,12 +320,12 @@ export const FAQ_ITEMS = [
 ];
 
 export const URGENCY = {
-  HEADLINE: "This Is A Race. You Can Still Win.",
-  SUBHEAD: "Every competitor who moves faster is taking market share. But speed isn't magic. It's systems. And you can install systems starting today.",
+  HEADLINE: "The Opportunity Is Now",
+  SUBHEAD: "Speed isn't magic. It's systems. And systems can be installed starting today. The businesses winning right now aren't special—they just moved first.",
   POINTS: [
-    "First to respond wins 73% of deals. Be first.",
-    "Faster teams win while others are still drafting. Be faster.",
-    "The gap widens every day. Start closing it today."
+    "Fast response times win more deals. Be the one who responds first.",
+    "Your team can handle 10x the volume without burning out.",
+    "Every workflow you automate creates compound returns across your business."
   ],
-  CTA_TEXT: "Don't just watch the race. Win it."
+  CTA_TEXT: "Start building your advantage today."
 };

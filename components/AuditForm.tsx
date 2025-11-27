@@ -12,8 +12,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     email: '',
     company: '',
     phone: '',
-    priority: '',
-    notes: ''
+    priority: ''
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -129,7 +128,6 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         company: formData.company,
         phone: formData.phone || 'Not provided',
         priority: formData.priority,
-        notes: formData.notes || 'No additional notes',
         timestamp: new Date().toISOString(),
         source: 'thraiv_landing_page',
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -554,25 +552,6 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     <option value="Get visibility across operations">Get visibility across operations</option>
                     <option value="Something else">Something else</option>
                   </select>
-                </motion.div>
-
-                {/* Notes Field (Optional) */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                >
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                    <MessageSquare size={16} className="text-thraiv-blue" />
-                    Anything else we should know? <span className="text-gray-400 font-normal">(optional)</span>
-                  </label>
-                  <textarea
-                    value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    rows={3}
-                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all resize-none"
-                    placeholder="Tell us about your biggest operational challenges..."
-                  />
                 </motion.div>
 
                 {/* Submit Button - ARTISTIC */}

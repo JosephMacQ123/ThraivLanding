@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Hero } from './components/Hero';
 import { VisionSection } from './components/VisionSection';
-import { PainSection, FrictionSection, CostSection, DreamSection, OutcomesSection, AudienceSection, AuditSection, HowItWorksSection, TrustBar, FAQSection, UrgencySection, SectionTransition } from './components/Sections';
+import { PainSection, FrictionSection, CostSection, OutcomesSection, AudienceSection, AuditSection, HowItWorksSection, TrustBar, FAQSection, UrgencySection, SectionTransition } from './components/Sections';
 import { Button } from './components/UI';
 import { AuditForm } from './components/AuditForm';
 
@@ -112,8 +112,6 @@ export default function App() {
         <FrictionSection />
         <SectionTransition text="" theme="light" />
         <CostSection />
-        <SectionTransition text="" theme="dark" />
-        <DreamSection />
         <SectionTransition text="" theme="light" />
         <HowItWorksSection />
         <SectionTransition text="" theme="dark" />
