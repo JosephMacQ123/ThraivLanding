@@ -614,7 +614,7 @@ export const HowItWorksSection: React.FC = () => {
                                 className="h-full relative group"
                             >
                                 {/* Flow Connector Arrows - PROMINENT - Higher z-index */}
-                                {i < 5 && (
+                                {i < 4 && (
                                     <div className="hidden lg:block absolute right-[-50px] top-1/2 -translate-y-1/2 z-50 pointer-events-none">
                                         <motion.div
                                             animate={{ x: [0, 10, 0] }}
@@ -627,7 +627,7 @@ export const HowItWorksSection: React.FC = () => {
                                 )}
 
                                 {/* Mobile Arrow (Down) - PROMINENT */}
-                                {i < 5 && (
+                                {i < 4 && (
                                     <div className="lg:hidden flex justify-center py-4 relative z-50">
                                         <motion.div
                                             animate={{ y: [0, 8, 0] }}

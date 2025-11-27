@@ -138,16 +138,9 @@ export const COPY = {
       phase: "Visibility"
     },
     {
-      title: "Improves Speed",
-      desc: "Your team gains breathing room. Your business gets faster every week. Problems prevented before they start.",
-      example: "Speed Up 42%",
-      icon: TrendingUp,
-      phase: "Growth"
-    },
-    {
       title: "Scales Infinitely",
-      desc: "Handle 10x the volume without hiring a single new admin staff member. Growth without the growing pains.",
-      example: "Volume 10x",
+      desc: "Handle 10x the volume without hiring more people. Your team gains breathing room. Growth without the growing pains.",
+      example: "No Limits",
       icon: Gauge,
       phase: "Scale"
     }
