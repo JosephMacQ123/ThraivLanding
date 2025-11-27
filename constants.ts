@@ -321,7 +321,7 @@ export const FAQ_ITEMS = [
 
 export const URGENCY = {
   HEADLINE: "The Opportunity Is Now",
-  SUBHEAD: "Speed isn't magic. It's systems. And systems can be installed starting today. The businesses winning right now aren't special—they just moved first.",
+  SUBHEAD: "Speed isn't magic. It's systems. And systems can be installed starting today. The businesses winning right now aren't special. They just moved first.",
   POINTS: [
     "Fast response times win more deals. Be the one who responds first.",
     "Your team can handle 10x the volume without burning out.",
