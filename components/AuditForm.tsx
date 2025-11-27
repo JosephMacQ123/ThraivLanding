@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle, Loader, X, User, Mail, Building2, Phone, Target, MessageSquare, Calendar, Clock, Sparkles, Zap, AlertTriangle } from 'lucide-react';
 
@@ -21,7 +21,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [completedFields, setCompletedFields] = useState<Set<string>>(new Set());
   const [isTyping, setIsTyping] = useState(false);
-  const typingTimeoutRef = React.useRef<NodeJS.Timeout>();
+  const typingTimeoutRef = useRef<number>();
 
   // Auto-save to localStorage
   useEffect(() => {
