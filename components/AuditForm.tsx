@@ -100,13 +100,14 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   useEffect(() => {
     if (requiredFieldsCompleted > 0) {
       const progress = requiredFieldsCompleted / totalRequiredFields;
-      if (progress === 0.25 || progress === 0.5 || progress === 0.75) {
-        triggerHaptic('medium');
-        playSound(1000, 0.15);
+      // Only celebrate at 50% and 100% milestones to reduce noise
+      if (progress === 0.5) {
+        triggerHaptic('light');
+        playSound(900, 0.1);
       }
       if (progress === 1) {
-        triggerHaptic('heavy');
-        playSound(1200, 0.2);
+        triggerHaptic('medium');
+        playSound(1100, 0.15);
       }
     }
   }, [requiredFieldsCompleted, totalRequiredFields]);
@@ -120,7 +121,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
 
     try {
       // Send to n8n webhook
-      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook-test/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
+      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
 
       const payload = {
         name: formData.name,
@@ -170,9 +171,9 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     }
   };
 
-  // Confetti Component
+  // Confetti Component - Optimized
   const Confetti = () => {
-    const pieces = Array.from({ length: 50 }, (_, i) => ({
+    const pieces = Array.from({ length: 30 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 0.5,
@@ -208,74 +209,40 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     );
   };
 
-  // Field Focus Particles
-  const FieldParticles = () => {
-    const particles = Array.from({ length: 8 }, (_, i) => ({
-      id: i,
-      angle: (i / 8) * 360,
-    }));
-
-    return (
-      <div className="absolute inset-0 pointer-events-none">
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute w-1.5 h-1.5 rounded-full bg-thraiv-blue"
-            style={{
-              left: '50%',
-              top: '50%',
-            }}
-            animate={{
-              x: [0, Math.cos((particle.angle * Math.PI) / 180) * 30],
-              y: [0, Math.sin((particle.angle * Math.PI) / 180) * 30],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: particle.id * 0.1,
-              ease: "easeOut"
-            }}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-md overflow-y-auto py-8" onClick={onClose}>
-      {/* Animated Background Gradient Orbs */}
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-sm overflow-y-auto py-8" onClick={onClose}>
+      {/* Simplified Background Gradient Orbs - Less CPU intensive */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+          className="absolute top-0 left-0 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl"
           animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: 'transform' }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl"
           animate={{
-            x: [0, -100, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.3, 1],
+            x: [0, -50, 0],
+            y: [0, -30, 0],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: 'transform' }}
         />
       </div>
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 50 }}
+        initial={{ opacity: 0, scale: 0.95, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 50 }}
-        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        exit={{ opacity: 0, scale: 0.95, y: 30 }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
         className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl border border-white/20 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         style={{
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+          willChange: 'transform, opacity'
         }}
       >
         {/* Close Button - Clean X */}
@@ -327,18 +294,12 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 </div>
                 <div className="relative w-full h-3 bg-white rounded-full overflow-hidden shadow-inner">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-thraiv-blue via-purple-500 to-blue-600 rounded-full relative"
+                    className="h-full bg-gradient-to-r from-thraiv-blue via-purple-500 to-blue-600 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${(requiredFieldsCompleted / totalRequiredFields) * 100}%` }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
-                    {/* Shimmer effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    />
-                  </motion.div>
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    style={{ willChange: 'width' }}
+                  />
                 </div>
               </div>
 
@@ -561,29 +522,24 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   transition={{ delay: 0.4 }}
                   className="relative mt-8"
                 >
-                  {/* Glow effect behind button */}
+                  {/* Subtle Glow effect behind button */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-xl opacity-50"
+                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-xl opacity-40 pointer-events-none"
                     animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                      scale: [0.95, 1.05, 0.95],
+                      opacity: [0.3, 0.5, 0.3],
                     }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    style={{ willChange: 'opacity' }}
                   />
 
                   <motion.button
                     type="submit"
                     disabled={loading}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
                     className="relative w-full px-6 py-5 rounded-xl bg-gradient-to-r from-thraiv-blue via-purple-600 to-blue-600 text-white font-black text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+                    style={{ willChange: 'transform' }}
                   >
-                    {/* Animated shine effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    />
 
                     {loading ? (
                       <>
