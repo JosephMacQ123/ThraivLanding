@@ -316,7 +316,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
             </div>
 
             {/* Dynamic Content Area */}
-            <div className="relative h-[300px] lg:h-[380px]">
+            <div className="relative h-[340px] lg:h-[420px]">
               <AnimatePresence mode="wait">
 
                 {/* PHASE 0: WATCH - What We're Monitoring */}
@@ -328,31 +328,31 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 flex flex-col"
                   >
-                    <div className="text-center mb-6">
+                    <div className="text-center mb-4">
                       <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Watches Everything</h3>
                       <p className="text-sm md:text-base text-gray-500 font-medium">Every email, RFQ, order, and data change monitored 24/7</p>
                     </div>
 
-                    <div className="relative flex-1">
+                    <div className="relative flex-1 mb-3">
                       {/* Simplified: Show 3 signals being detected */}
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <motion.div
                           initial={{ x: -50, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0 }}
-                          className="bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 flex items-center gap-4"
+                          className="bg-gradient-to-r from-blue-50 to-white p-3 rounded-xl shadow-md border-l-4 border-blue-500 flex items-center gap-3"
                         >
-                          <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
-                            <Mail size={24} />
+                          <div className="p-2.5 bg-blue-100 rounded-lg text-blue-600">
+                            <Mail size={20} />
                           </div>
-                          <div className="flex-1">
-                            <div className="font-bold text-gray-800">New Lead Email</div>
-                            <div className="text-sm text-gray-500">Detected in inbox • High priority</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-gray-800 text-sm">New Lead Email</div>
+                            <div className="text-xs text-gray-500 truncate">Detected in inbox • High priority</div>
                           </div>
                           <motion.div
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
-                            className="w-3 h-3 bg-blue-500 rounded-full"
+                            className="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"
                           />
                         </motion.div>
 
@@ -360,19 +360,19 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                           initial={{ x: -50, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.2 }}
-                          className="bg-gradient-to-r from-purple-50 to-white p-4 rounded-xl shadow-md border-l-4 border-purple-500 flex items-center gap-4"
+                          className="bg-gradient-to-r from-purple-50 to-white p-3 rounded-xl shadow-md border-l-4 border-purple-500 flex items-center gap-3"
                         >
-                          <div className="p-3 bg-purple-100 rounded-lg text-purple-600">
-                            <FileText size={24} />
+                          <div className="p-2.5 bg-purple-100 rounded-lg text-purple-600">
+                            <FileText size={20} />
                           </div>
-                          <div className="flex-1">
-                            <div className="font-bold text-gray-800">RFQ Received</div>
-                            <div className="text-sm text-gray-500">Request #902 • Needs quote</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-gray-800 text-sm">RFQ Received</div>
+                            <div className="text-xs text-gray-500 truncate">Request #902 • Needs quote</div>
                           </div>
                           <motion.div
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
-                            className="w-3 h-3 bg-purple-500 rounded-full"
+                            className="w-3 h-3 bg-purple-500 rounded-full flex-shrink-0"
                           />
                         </motion.div>
 
@@ -380,19 +380,19 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                           initial={{ x: -50, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.5, delay: 0.4 }}
-                          className="bg-gradient-to-r from-orange-50 to-white p-4 rounded-xl shadow-md border-l-4 border-orange-500 flex items-center gap-4"
+                          className="bg-gradient-to-r from-orange-50 to-white p-3 rounded-xl shadow-md border-l-4 border-orange-500 flex items-center gap-3"
                         >
-                          <div className="p-3 bg-orange-100 rounded-lg text-orange-600">
-                            <Package size={24} />
+                          <div className="p-2.5 bg-orange-100 rounded-lg text-orange-600">
+                            <Package size={20} />
                           </div>
-                          <div className="flex-1">
-                            <div className="font-bold text-gray-800">Order Status Change</div>
-                            <div className="text-sm text-gray-500">Shipment delayed • Customer needs alert</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-gray-800 text-sm">Order Status Change</div>
+                            <div className="text-xs text-gray-500 truncate">Shipment delayed • Customer needs alert</div>
                           </div>
                           <motion.div
                             animate={{ scale: [1, 1.2, 1] }}
                             transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}
-                            className="w-3 h-3 bg-orange-500 rounded-full"
+                            className="w-3 h-3 bg-orange-500 rounded-full flex-shrink-0"
                           />
                         </motion.div>
                       </div>
@@ -421,53 +421,53 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                       <p className="text-sm md:text-base text-gray-500 font-medium">Automated responses, quotes, and alerts in seconds</p>
                     </div>
 
-                    <div className="flex-1 space-y-3">
+                    <div className="flex-1 space-y-3 mb-3">
                       <motion.div
                         initial={{ x: 50, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0 }}
-                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                        className="bg-white p-3 rounded-xl shadow-md border border-gray-100 flex items-center gap-3"
                       >
-                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
-                          <CheckCircle size={24} />
+                        <div className="p-2.5 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={20} />
                         </div>
-                        <div className="flex-1">
-                          <div className="font-bold text-gray-800">Lead Auto-Responded</div>
-                          <div className="text-sm text-gray-500">Meeting link sent • 2.1 seconds</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-gray-800 text-sm">Lead Auto-Responded</div>
+                          <div className="text-xs text-gray-500 truncate">Meeting link sent • 2.1 seconds</div>
                         </div>
-                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                        <div className="text-xs text-green-600 font-bold flex-shrink-0">✓ Done</div>
                       </motion.div>
 
                       <motion.div
                         initial={{ x: 50, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                        className="bg-white p-3 rounded-xl shadow-md border border-gray-100 flex items-center gap-3"
                       >
-                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
-                          <CheckCircle size={24} />
+                        <div className="p-2.5 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={20} />
                         </div>
-                        <div className="flex-1">
-                          <div className="font-bold text-gray-800">Quote Generated</div>
-                          <div className="text-sm text-gray-500">RFQ #902 priced • Ready for review</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-gray-800 text-sm">Quote Generated</div>
+                          <div className="text-xs text-gray-500 truncate">RFQ #902 priced • Ready for review</div>
                         </div>
-                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                        <div className="text-xs text-green-600 font-bold flex-shrink-0">✓ Done</div>
                       </motion.div>
 
                       <motion.div
                         initial={{ x: 50, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.4 }}
-                        className="bg-white p-4 rounded-xl shadow-md border border-gray-100 flex items-center gap-4"
+                        className="bg-white p-3 rounded-xl shadow-md border border-gray-100 flex items-center gap-3"
                       >
-                        <div className="p-3 bg-green-100 rounded-lg text-green-600">
-                          <CheckCircle size={24} />
+                        <div className="p-2.5 bg-green-100 rounded-lg text-green-600">
+                          <CheckCircle size={20} />
                         </div>
-                        <div className="flex-1">
-                          <div className="font-bold text-gray-800">Customer Notified</div>
-                          <div className="text-sm text-gray-500">Delay alert sent • Proactive update</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-gray-800 text-sm">Customer Notified</div>
+                          <div className="text-xs text-gray-500 truncate">Delay alert sent • Proactive update</div>
                         </div>
-                        <div className="text-xs text-green-600 font-bold">✓ Done</div>
+                        <div className="text-xs text-green-600 font-bold flex-shrink-0">✓ Done</div>
                       </motion.div>
                     </div>
 
@@ -475,16 +475,16 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6 }}
-                      className="mt-auto bg-thraiv-navy text-white p-4 rounded-xl flex items-center justify-between shadow-lg"
+                      className="mt-auto bg-thraiv-navy text-white p-3 rounded-xl flex items-center justify-between shadow-lg"
                     >
                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-white/10 rounded-lg"><Clock size={20} className="text-blue-300" /></div>
+                          <div className="p-2 bg-white/10 rounded-lg"><Clock size={18} className="text-blue-300" /></div>
                           <div>
-                            <div className="text-xs text-gray-400 uppercase">Time Saved Today</div>
-                            <div className="font-bold text-lg">14.5 Hours</div>
+                            <div className="text-[10px] text-gray-400 uppercase">Time Saved Today</div>
+                            <div className="font-bold text-base">14.5 Hours</div>
                           </div>
                        </div>
-                       <div className="text-green-400 text-sm font-bold">+12%</div>
+                       <div className="text-green-400 text-xs font-bold">+12%</div>
                     </motion.div>
                   </motion.div>
                 )}
@@ -492,7 +492,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
             </div>
             
             {/* Interactive Control Panel */}
-            <div className="mt-6 border-t border-gray-100 pt-4">
+            <div className="mt-8 border-t border-gray-100 pt-5">
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: "Watch", sub: "Signals", icon: <Search size={16} />, color: "bg-blue-500" },
