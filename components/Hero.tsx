@@ -58,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-32 md:pb-32 overflow-hidden">
+    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-32 overflow-hidden">
       {/* MAGICAL EFFECTS - Balanced */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Small Fast Particles - Refined */}

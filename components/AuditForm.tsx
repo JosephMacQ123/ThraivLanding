@@ -728,7 +728,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     <span className="text-white text-xs font-black">2</span>
                   </div>
                   <div className="flex-1">
-                    <div className="font-black text-thraiv-navy text-sm">We Analyze {formData.priority ? `Your ${formData.priority}` : 'Your Operations'}</div>
+                    <div className="font-black text-thraiv-navy text-sm">We Analyze Your Operations</div>
                     <div className="text-xs text-gray-600 mt-1 leading-relaxed">We identify your quick wins, bottlenecks, and biggest opportunities</div>
                   </div>
                 </div>

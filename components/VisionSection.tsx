@@ -22,9 +22,6 @@ export const VisionSection: React.FC = () => {
     }
   ];
 
-  // Show only first 2 on mobile for faster scroll
-  const mobileComparisons = comparisons.slice(0, 2);
-
   return (
     <section className="relative py-10 md:py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50 overflow-hidden">
       {/* Subtle background effects */}
