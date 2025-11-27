@@ -5,7 +5,7 @@ import { Mail, Search, AlertTriangle, Clock, Zap, BarChart3, CheckCircle, Target
 export const VisionSection: React.FC = () => {
   const comparisons = [
     {
-      before: { icon: Mail, text: "Buried in emails", subtext: "Leads sitting unnoticed" },
+      before: { icon: Mail, text: "Buried in emails", subtext: "Customers sitting unnoticed" },
       after: { icon: Zap, text: "RFQs & Leads engaged instantly", subtext: "Automatic capture & response", stat: "< 5 min avg" }
     },
     {

@@ -18,6 +18,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
   const [submitted, setSubmitted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const modalContentRef = React.useRef<HTMLDivElement>(null);
   const [completedFields, setCompletedFields] = useState<Set<string>>(new Set());
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<number>();
@@ -145,7 +146,6 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
       });
 
       console.log('✅ Response status:', response.status);
-      console.log('📨 Response:', await response.text());
 
       if (!response.ok) {
         throw new Error(`Webhook failed with status ${response.status}`);
@@ -153,6 +153,12 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
 
       setSubmitted(true);
       setShowConfetti(true);
+
+      // Scroll to top to see confetti
+      setTimeout(() => {
+        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
+
       console.log('🎉 Form submitted successfully!');
     } catch (error) {
       console.error('❌ Submission error:', error);
@@ -164,6 +170,11 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
       // Still show success to user (form data is logged in console)
       setSubmitted(true);
       setShowConfetti(true);
+
+      // Scroll to top to see confetti
+      setTimeout(() => {
+        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 50);
     } finally {
       setLoading(false);
     }
@@ -232,6 +243,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
       </div>
 
       <motion.div
+        ref={modalContentRef}
         initial={{ opacity: 0, scale: 0.95, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 30 }}

@@ -89,7 +89,7 @@ export const TrustBar: React.FC = () => {
   return (
     <section className="bg-white border-y border-gray-100 py-8 md:py-12 relative z-20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-center justify-center max-w-6xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-10 max-w-4xl mx-auto">
             {TRUST_POINTS.map((item, i) => (
                 <motion.div
                     key={i}
