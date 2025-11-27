@@ -42,31 +42,53 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     e.preventDefault();
     setLoading(true);
 
+    // Log form data for debugging
+    console.log('📋 Form Data:', formData);
+
     try {
       // Send to n8n webhook
       const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook-test/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
 
-      await fetch(webhookUrl, {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone || 'Not provided',
+        priority: formData.priority,
+        notes: formData.notes || 'No additional notes',
+        timestamp: new Date().toISOString(),
+        source: 'thraiv_landing_page',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+
+      console.log('🚀 Sending to webhook:', webhookUrl);
+      console.log('📦 Payload:', payload);
+
+      const response = await fetch(webhookUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          phone: formData.phone || 'Not provided',
-          priority: formData.priority,
-          notes: formData.notes || 'No additional notes',
-          timestamp: new Date().toISOString(),
-          source: 'thraiv_landing_page',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        })
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
       });
+
+      console.log('✅ Response status:', response.status);
+      console.log('📨 Response:', await response.text());
+
+      if (!response.ok) {
+        throw new Error(`Webhook failed with status ${response.status}`);
+      }
 
       setSubmitted(true);
       setShowConfetti(true);
-      // Don't auto-close - let them enjoy the success screen
+      console.log('🎉 Form submitted successfully!');
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error('❌ Submission error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
       // Still show success to user (form data is logged in console)
       setSubmitted(true);
       setShowConfetti(true);
