@@ -26,7 +26,7 @@ const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
       <div className="container mx-auto px-6 flex justify-between items-center">
         <div className="text-2xl font-bold text-thraiv-navy tracking-tight flex items-center gap-2">
             <div className="w-6 h-6 bg-thraiv-blue rounded-md"></div>
-            Thraiv.
+            Thraiv
         </div>
 
         {/* SUPER OBVIOUS AUDIT BUTTON */}
@@ -67,7 +67,7 @@ const Footer: React.FC = () => (
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-2xl font-bold flex items-center gap-2">
                  <div className="w-6 h-6 bg-thraiv-blue rounded-md"></div>
-                 Thraiv.
+                 Thraiv
             </div>
             <div className="text-gray-400 text-sm">
                 © {new Date().getFullYear()} Thraiv Systems. All rights reserved.
