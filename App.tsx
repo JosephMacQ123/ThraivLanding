@@ -33,11 +33,12 @@ const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
           onClick={onBookAudit}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-thraiv-blue to-blue-600 text-white font-bold text-base md:text-lg rounded-xl md:rounded-2xl shadow-2xl shadow-blue-500/50 hover:shadow-blue-500/70 transition-all duration-300 flex items-center gap-2 group"
+          className="relative px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-thraiv-blue to-blue-600 text-white font-bold text-base md:text-lg rounded-xl md:rounded-2xl shadow-2xl shadow-blue-500/50 hover:shadow-blue-500/70 transition-all duration-300 flex items-center gap-2 group z-50 touch-manipulation"
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
           {/* Pulsing glow effect */}
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-thraiv-blue to-blue-600 rounded-xl md:rounded-2xl blur-xl opacity-50"
+            className="absolute inset-0 bg-gradient-to-r from-thraiv-blue to-blue-600 rounded-xl md:rounded-2xl blur-xl opacity-50 pointer-events-none"
             animate={{
               opacity: [0.3, 0.6, 0.3],
               scale: [1, 1.05, 1]

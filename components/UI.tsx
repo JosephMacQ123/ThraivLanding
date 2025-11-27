@@ -10,7 +10,7 @@ interface ButtonProps {
 }
 
 export const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'primary', className = '', icon }) => {
-  const baseStyle = "px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 justify-center";
+  const baseStyle = "px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-2 justify-center touch-manipulation cursor-pointer";
   const variants = {
     primary: "bg-thraiv-blue text-white hover:bg-blue-600 shadow-lg shadow-blue-500/30",
     secondary: "bg-thraiv-navy text-white hover:bg-opacity-90",
@@ -23,6 +23,7 @@ export const Button: React.FC<ButtonProps> = ({ children, onClick, variant = 'pr
       whileTap={{ scale: 0.98 }}
       className={`${baseStyle} ${variants[variant]} ${className}`}
       onClick={onClick}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
       {children}
       {icon && <span className="ml-1">{icon}</span>}
