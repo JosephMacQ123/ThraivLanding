@@ -613,13 +613,13 @@ export const HowItWorksSection: React.FC = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="h-full relative group"
                             >
-                                {/* Flow Connector Arrows - PROMINENT */}
+                                {/* Flow Connector Arrows - PROMINENT - Higher z-index */}
                                 {i < 5 && (
-                                    <div className="hidden lg:block absolute right-[-50px] top-1/2 -translate-y-1/2 z-30">
+                                    <div className="hidden lg:block absolute right-[-50px] top-1/2 -translate-y-1/2 z-50 pointer-events-none">
                                         <motion.div
                                             animate={{ x: [0, 10, 0] }}
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                                            className="bg-thraiv-blue rounded-full p-3 shadow-2xl shadow-blue-500/50"
+                                            className="bg-thraiv-blue rounded-full p-3 shadow-2xl shadow-blue-500/50 relative z-50"
                                         >
                                             <ArrowRight size={32} className="text-white" strokeWidth={3} />
                                         </motion.div>
@@ -628,7 +628,7 @@ export const HowItWorksSection: React.FC = () => {
 
                                 {/* Mobile Arrow (Down) - PROMINENT */}
                                 {i < 5 && (
-                                    <div className="lg:hidden flex justify-center py-4">
+                                    <div className="lg:hidden flex justify-center py-4 relative z-50">
                                         <motion.div
                                             animate={{ y: [0, 8, 0] }}
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -639,7 +639,7 @@ export const HowItWorksSection: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div className="h-full bg-white rounded-[2rem] p-10 border border-gray-100 shadow-xl shadow-gray-100/50 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center relative z-10">
+                                <div className="h-full bg-white rounded-[2rem] p-10 border border-gray-100 shadow-xl shadow-gray-100/50 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-300 hover:-translate-y-2 flex flex-col items-center text-center relative z-0">
                                     
                                     {/* Number Badge */}
                                     <div className="absolute top-8 right-8 text-gray-100 text-6xl font-black opacity-40 group-hover:opacity-100 group-hover:text-blue-50 transition-all select-none">
