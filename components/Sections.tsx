@@ -43,7 +43,7 @@ interface SectionTransitionProps {
 export const SectionTransition: React.FC<SectionTransitionProps> = ({ text, theme = 'light' }) => {
   if (!text || text.trim() === '') {
     return (
-      <div className={`py-8 md:py-12 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
+      <div className={`py-4 md:py-8 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             initial={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export const SectionTransition: React.FC<SectionTransitionProps> = ({ text, them
   }
 
   return (
-    <div className={`py-10 md:py-14 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
+    <div className={`py-6 md:py-12 ${theme === 'light' ? 'bg-white' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -89,7 +89,7 @@ export const TrustBar: React.FC = () => {
   return (
     <section className="bg-white border-y border-gray-100 py-8 md:py-12 relative z-20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 items-center justify-center max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 items-center justify-center max-w-6xl mx-auto">
             {TRUST_POINTS.map((item, i) => (
                 <motion.div
                     key={i}
@@ -118,7 +118,7 @@ export const TrustBar: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const PainSection: React.FC = () => {
   return (
-    <section className="py-12 md:py-16 bg-white relative overflow-hidden">
+    <section className="py-10 md:py-16 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         {/* Headline - As Extension of Hero */}
         <motion.div
@@ -131,35 +131,37 @@ export const PainSection: React.FC = () => {
           </h2>
         </motion.div>
 
-        {/* Cards - Compact 3-column grid on mobile */}
-        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto">
+        {/* Cards - Mobile-optimized 2-column grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto">
           {COPY.PAIN.CARDS.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-30px", amount: 0.2 }}
+              viewport={{ once: true, margin: "-50px", amount: 0.3 }}
               transition={{
-                delay: i * 0.02,
-                duration: 0.3,
+                delay: i * 0.04,
+                duration: 0.4,
                 type: "spring",
-                stiffness: 120,
-                damping: 15
+                stiffness: 100,
+                damping: 12
               }}
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
               className={`
-                bg-white p-2 md:p-3 rounded-lg md:rounded-xl shadow-md border-l-2 md:border-l-4
-                flex flex-col items-center justify-center text-center gap-1 md:gap-2
-                hover:shadow-lg transition-all duration-300 relative
-                min-h-[80px] md:min-h-[100px]
+                bg-white p-3 md:p-4 rounded-xl shadow-md border-l-4
+                flex flex-col items-center justify-center text-center gap-2 md:gap-2.5
+                hover:shadow-xl transition-all duration-300 relative cursor-default
+                min-h-[110px] md:min-h-[120px]
               `}
               style={{
                 borderLeftColor: item.color === 'red' ? '#EF4444' : '#F59E0B'
               }}
             >
-              <div className={`p-1.5 md:p-2 rounded-lg flex-shrink-0 ${item.color === 'red' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
-                <item.icon size={16} className="md:w-5 md:h-5" />
+              <div className={`p-2 md:p-2.5 rounded-lg flex-shrink-0 ${item.color === 'red' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
+                <item.icon size={20} className="md:w-6 md:h-6" />
               </div>
-              <span className="font-bold text-gray-800 text-[10px] md:text-sm leading-tight">{item.text}</span>
+              <span className="font-bold text-gray-800 text-xs md:text-sm leading-snug px-1">{item.text}</span>
             </motion.div>
           ))}
         </div>
@@ -269,7 +271,7 @@ const DelayBar: React.FC<{ percentage: number; color: string; delay?: number }> 
 
 export const FrictionSection: React.FC = () => {
   return (
-    <section className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+    <section className="py-12 md:py-20 lg:py-24 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <svg className="w-full h-full">
@@ -475,7 +477,7 @@ export const FrictionSection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const StorySection: React.FC = () => {
   return (
-    <section className="py-24 md:py-32 bg-thraiv-navy text-white overflow-hidden relative">
+    <section className="py-16 md:py-28 bg-thraiv-navy text-white overflow-hidden relative">
       {/* Background Grid */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
            <svg className="w-full h-full" fill="none">
@@ -575,7 +577,7 @@ export const StorySection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const HowItWorksSection: React.FC = () => {
     return (
-        <section className="py-24 md:py-32 bg-white relative overflow-hidden">
+        <section className="py-16 md:py-28 bg-white relative overflow-hidden">
             {/* Pipeline Background Graphic */}
             <div className="absolute inset-0 pointer-events-none hidden lg:block max-w-[1400px] mx-auto top-64 z-0">
                <svg width="100%" height="100%" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-10">
@@ -602,7 +604,7 @@ export const HowItWorksSection: React.FC = () => {
 
                  {/* Visual Grid for Desktop */}
                  <div className="relative max-w-7xl mx-auto">
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-y-24">
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-y-16">
                         {COPY.HOW_IT_WORKS.map((step, i) => (
                             <motion.div
                                 key={i}
@@ -613,26 +615,26 @@ export const HowItWorksSection: React.FC = () => {
                             >
                                 {/* Flow Connector Arrows - PROMINENT */}
                                 {i < 5 && (
-                                    <div className="hidden lg:block absolute right-[-60px] top-1/2 -translate-y-1/2 z-20">
+                                    <div className="hidden lg:block absolute right-[-50px] top-1/2 -translate-y-1/2 z-30">
                                         <motion.div
                                             animate={{ x: [0, 10, 0] }}
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                                             className="bg-thraiv-blue rounded-full p-3 shadow-2xl shadow-blue-500/50"
                                         >
-                                            <ArrowRight size={36} className="text-white" strokeWidth={3} />
+                                            <ArrowRight size={32} className="text-white" strokeWidth={3} />
                                         </motion.div>
                                     </div>
                                 )}
 
                                 {/* Mobile Arrow (Down) - PROMINENT */}
                                 {i < 5 && (
-                                    <div className="lg:hidden flex justify-center py-8">
+                                    <div className="lg:hidden flex justify-center py-4">
                                         <motion.div
-                                            animate={{ y: [0, 10, 0] }}
+                                            animate={{ y: [0, 8, 0] }}
                                             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                                            className="bg-thraiv-blue rounded-full p-3 shadow-2xl shadow-blue-500/50"
+                                            className="bg-thraiv-blue rounded-full p-2.5 shadow-2xl shadow-blue-500/50"
                                         >
-                                            <ChevronDown size={36} className="text-white" strokeWidth={3} />
+                                            <ChevronDown size={28} className="text-white" strokeWidth={3} />
                                         </motion.div>
                                     </div>
                                 )}
@@ -926,7 +928,7 @@ export const CostSection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const DreamSection: React.FC = () => {
     return (
-        <section className="py-24 md:py-32 bg-white border-b border-gray-100">
+        <section className="py-16 md:py-28 bg-white border-b border-gray-100">
             <div className="container mx-auto px-6">
                 <SectionHeader
                     title={COPY.DREAM.HEADLINE}
@@ -1030,7 +1032,7 @@ export const DreamSection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const OutcomesSection: React.FC = () => {
     return (
-        <section className="py-32 bg-thraiv-navy relative overflow-hidden">
+        <section className="py-16 md:py-28 bg-thraiv-navy relative overflow-hidden">
              {/* Background Glow */}
              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-500/10 blur-[100px] rounded-full"></div>
 
@@ -1086,7 +1088,7 @@ export const OutcomesSection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const AudienceSection: React.FC = () => {
     return (
-        <section className="py-24 bg-gray-50">
+        <section className="py-16 md:py-24 bg-gray-50">
             <div className="container mx-auto px-6">
                  <SectionHeader
                     title="Who Thraiv Is For"
@@ -1128,10 +1130,10 @@ export const AudienceSection: React.FC = () => {
 /*                                  FAQ SECTION                               */
 /* -------------------------------------------------------------------------- */
 export const FAQSection: React.FC = () => {
-    const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+    const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-16 md:py-24 bg-white">
             <div className="container mx-auto px-6">
                 <SectionHeader
                     title="Questions You're Probably Asking"
@@ -1190,7 +1192,7 @@ export const FAQSection: React.FC = () => {
 /* -------------------------------------------------------------------------- */
 export const UrgencySection: React.FC = () => {
     return (
-        <section className="py-24 bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 border-y-4 border-blue-200">
+        <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 border-y-4 border-blue-200">
             <div className="container mx-auto px-6">
                 <div className="max-w-5xl mx-auto text-center">
                     <motion.div
@@ -1245,7 +1247,7 @@ interface AuditSectionProps {
 
 export const AuditSection: React.FC<AuditSectionProps> = ({ onBookAudit }) => {
     return (
-        <section className="py-32 bg-black relative overflow-hidden text-center">
+        <section className="py-20 md:py-32 bg-black relative overflow-hidden text-center">
             {/* Singularity Background Effect */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-gray-900 to-black"></div>
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>

@@ -58,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-32 md:pb-20 overflow-hidden">
       {/* MAGICAL EFFECTS - Balanced */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Small Fast Particles - Refined */}
@@ -162,7 +162,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-100/30 via-transparent to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-blue-50/10 to-transparent pointer-events-none" />
 
-      <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-start lg:items-center relative z-10">
+      <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-2 gap-8 md:gap-12 items-start lg:items-center relative z-10">
 
         {/* Left Content */}
         <div className="relative z-10 order-1 lg:order-1">
@@ -176,7 +176,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: 0.1, type: "spring", stiffness: 150 }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200/60 text-blue-700 text-sm font-bold mb-10 shadow-lg shadow-blue-200/30 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200/60 text-blue-700 text-xs md:text-sm font-bold mb-6 md:mb-8 shadow-lg shadow-blue-200/30 backdrop-blur-sm"
             >
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
@@ -192,7 +192,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="mb-16 relative"
+              className="mb-8 md:mb-12 relative"
             >
               {/* Refined Pulsing Ambient Glow */}
               <motion.div
@@ -540,12 +540,12 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
         </div>
       </div>
 
-      {/* Scroll Hint - Bouncing Animation */}
+      {/* Scroll Hint - Bouncing Animation - Hidden on mobile, shows on tablet+ */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-400 cursor-default z-20"
+        className="hidden md:flex absolute bottom-16 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-gray-400 cursor-default z-20"
       >
         <span className="text-sm md:text-base font-medium">Discover How</span>
         <motion.div

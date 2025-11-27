@@ -17,11 +17,6 @@ export const TRUST_POINTS = [
         value: "$100M+ Operations"
     },
     {
-        icon: TrendingUp,
-        label: "Proven Growth",
-        value: "27 Businesses • 2.4x Avg"
-    },
-    {
         icon: Award,
         label: "Best Result",
         value: "$1M to $6M (3 Years)"
