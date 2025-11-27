@@ -131,8 +131,8 @@ export const PainSection: React.FC = () => {
           </h2>
         </motion.div>
 
-        {/* Cards - Mobile-optimized 2-column grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 max-w-6xl mx-auto">
+        {/* Cards - Perfect 3×3 grid */}
+        <div className="grid grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto">
           {COPY.PAIN.CARDS.map((item, i) => (
             <motion.div
               key={i}
@@ -140,28 +140,28 @@ export const PainSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-50px", amount: 0.3 }}
               transition={{
-                delay: i * 0.04,
+                delay: i * 0.05,
                 duration: 0.4,
                 type: "spring",
                 stiffness: 100,
                 damping: 12
               }}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
               className={`
-                bg-white p-3 md:p-4 rounded-xl shadow-md border-l-4
-                flex flex-col items-center justify-center text-center gap-2 md:gap-2.5
+                bg-white p-3 md:p-5 rounded-lg md:rounded-xl shadow-md border-l-4
+                flex flex-col items-center justify-center text-center gap-2 md:gap-3
                 hover:shadow-xl transition-all duration-300 relative cursor-default
-                min-h-[110px] md:min-h-[120px]
+                min-h-[120px] md:min-h-[140px]
               `}
               style={{
                 borderLeftColor: item.color === 'red' ? '#EF4444' : '#F59E0B'
               }}
             >
               <div className={`p-2 md:p-2.5 rounded-lg flex-shrink-0 ${item.color === 'red' ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'}`}>
-                <item.icon size={20} className="md:w-6 md:h-6" />
+                <item.icon size={18} className="md:w-6 md:h-6" />
               </div>
-              <span className="font-bold text-gray-800 text-xs md:text-sm leading-snug px-1">{item.text}</span>
+              <span className="font-bold text-gray-800 text-[11px] md:text-sm leading-tight px-1">{item.text}</span>
             </motion.div>
           ))}
         </div>
