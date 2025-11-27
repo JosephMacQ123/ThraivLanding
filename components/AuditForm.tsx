@@ -682,16 +682,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 transition={{ delay: 0.6 }}
                 className="text-gray-600 text-base mb-6 max-w-md mx-auto leading-relaxed"
               >
-                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze {formData.priority ? `your ${formData.priority.toLowerCase()}` : 'your current problems'} and get back to you ASAP with next steps.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.65 }}
-                className="text-gray-700 font-medium text-sm mb-6 max-w-md mx-auto"
-              >
-                We'll contact you within a few minutes to start the conversation and book in your call.
+                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze {formData.priority ? `your ${formData.priority.toLowerCase()}` : 'your current problems'} and get back to you ASAP with next steps
               </motion.p>
 
               {/* Important: Check Spam */}
@@ -768,7 +759,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   </div>
                   <div className="flex-1">
                     <div className="font-black text-thraiv-navy text-sm">We Contact You Within A Few Minutes</div>
-                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We'll reach out via email/call to start the conversation</div>
+                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We'll reach out via email to start the conversation</div>
                   </div>
                 </div>
 

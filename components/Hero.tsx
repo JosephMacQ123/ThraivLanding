@@ -241,10 +241,10 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   `
                 }}
               >
-                Fast Operations Win.
+                Fast Operations Win
               </span>
               <span className="block text-2xl md:text-3xl lg:text-4xl font-medium text-gray-600 leading-[1.4] max-w-3xl relative">
-                The Delays You Think Are Normal Are Costing You the Most.
+                The Delays You Think Are Normal Are Costing You the Most
               </span>
             </motion.h1>
 
@@ -345,7 +345,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   >
                     <div className="text-center mb-6">
                       <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Watches Everything</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">Every signal captured the moment it happens.</p>
+                      <p className="text-sm md:text-base text-gray-500 font-medium">Every signal captured the moment it happens</p>
                     </div>
 
                     <div className="relative flex-1">
@@ -420,7 +420,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   >
                      <div className="text-center mb-4">
                       <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Works For You</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">Quotes drafted, emails sent, questions answered, leads engaged, tasks complete.</p>
+                      <p className="text-sm md:text-base text-gray-500 font-medium">Quotes drafted, emails sent, questions answered, leads engaged, tasks complete</p>
                     </div>
 
                     <div className="flex-1 overflow-y-auto px-1">
@@ -435,7 +435,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                       onMouseEnter={() => setActiveTooltip("saved")}
                       onMouseLeave={() => setActiveTooltip(null)}
                     >
-                       {activeTooltip === "saved" && <Tooltip text="Hours returned to your team this week." />}
+                       {activeTooltip === "saved" && <Tooltip text="Hours returned to your team this week" />}
                        <div className="flex items-center gap-3">
                           <div className="p-2 bg-white/10 rounded-lg"><Clock size={20} className="text-blue-300" /></div>
                           <div>
@@ -459,7 +459,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   >
                     <div className="text-center mb-6">
                       <h3 className="text-xl md:text-2xl font-bold text-thraiv-navy mb-2">Surfaces Insights</h3>
-                      <p className="text-sm md:text-base text-gray-500 font-medium">See problems instantly. Act before they cost you. One source of truth.</p>
+                      <p className="text-sm md:text-base text-gray-500 font-medium">See problems instantly Act before they cost you One source of truth</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
