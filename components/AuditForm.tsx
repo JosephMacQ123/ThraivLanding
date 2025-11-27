@@ -276,6 +276,51 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 15 minutes. Zero cost. Zero pressure.
               </p>
 
+              {/* Compelling Value Proposition */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 border-2 border-blue-100"
+              >
+                <div className="text-center mb-3">
+                  <span className="text-xs font-black text-thraiv-blue uppercase tracking-wide">In This 15-Minute Audit, You'll Discover:</span>
+                </div>
+                <div className="space-y-2 text-left">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-xs font-medium text-gray-700">Exactly where you're leaking revenue</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-xs font-medium text-gray-700">Your biggest operational bottleneck</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-xs font-medium text-gray-700">3 quick wins you can implement immediately</span>
+                  </div>
+                </div>
+
+                {/* Social Proof + Trust Signals */}
+                <div className="mt-4 pt-4 border-t border-blue-200">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Sparkles size={14} className="text-thraiv-blue" />
+                    <span className="text-xs font-bold text-thraiv-navy">Join 27 businesses growing 2.4x faster</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 text-xs text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Clock size={12} className="text-green-600" />
+                      <span>90 seconds to complete</span>
+                    </div>
+                    <span>•</span>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle size={12} className="text-green-600" />
+                      <span>100% free</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
               {/* Progress Indicator - Artistic */}
               <div className="mb-8 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 p-4 rounded-2xl border border-blue-100">
                 <div className="flex items-center justify-between mb-3">
