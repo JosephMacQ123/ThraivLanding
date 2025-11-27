@@ -291,35 +291,24 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                     <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
                       <CheckCircle size={14} className="text-white" />
                     </div>
-                    <span className="text-xs font-bold text-gray-800">Find where you're losing revenue right now (and recapture it)</span>
+                    <span className="text-xs font-bold text-gray-800">Where you're losing revenue (and how to recapture it)</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
                       <CheckCircle size={14} className="text-white" />
                     </div>
-                    <span className="text-xs font-bold text-gray-800">What bottlenecks you don't need to be dealing with (and eliminate them)</span>
+                    <span className="text-xs font-bold text-gray-800">Which bottlenecks to eliminate first</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
                       <CheckCircle size={14} className="text-white" />
                     </div>
-                    <span className="text-xs font-bold text-gray-800">3 things we can build to fix them (and free up your team)</span>
+                    <span className="text-xs font-bold text-gray-800">3 systems we'd build to fix them</span>
                   </div>
                 </div>
 
-                {/* Outcome Statement */}
-                <div className="mt-4 bg-white/80 rounded-lg p-3 border border-blue-200">
-                  <p className="text-xs text-center font-black text-thraiv-navy leading-relaxed">
-                    Find out exactly what to do to solve your problems and create value.
-                  </p>
-                </div>
-
-                {/* Social Proof + Trust Signals */}
+                {/* Trust Signals */}
                 <div className="mt-4 pt-4 border-t border-blue-200">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Sparkles size={14} className="text-thraiv-blue" />
-                    <span className="text-xs font-bold text-thraiv-navy">Join 27 businesses growing 2.4x faster</span>
-                  </div>
                   <div className="flex items-center justify-center gap-3 text-xs text-gray-600">
                     <div className="flex items-center gap-1">
                       <Clock size={12} className="text-green-600" />
@@ -781,12 +770,8 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                 transition={{ delay: 1 }}
                 className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-100 mb-6"
               >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Sparkles size={16} className="text-thraiv-blue" />
-                  <span className="text-sm font-bold text-thraiv-navy">Join 27 businesses growing faster</span>
-                </div>
-                <div className="text-2xl font-black text-thraiv-blue">2.4x Average Growth</div>
-                <div className="text-xs text-gray-600 mt-1">Since installing intelligent operations</div>
+                <div className="text-2xl font-black text-thraiv-blue mb-1">2.4x Average Growth</div>
+                <div className="text-xs text-gray-600">With intelligent operations systems</div>
               </motion.div>
 
               {/* Close Button */}
