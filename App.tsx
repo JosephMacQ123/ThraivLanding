@@ -7,8 +7,9 @@ import { VisionSection } from './components/VisionSection';
 import { PainSection, FrictionSection, CostSection, OutcomesSection, AudienceSection, AuditSection, HowItWorksSection, TrustBar, FAQSection, UrgencySection, SectionTransition } from './components/Sections';
 import { Button } from './components/UI';
 import { AuditForm } from './components/AuditForm';
+import { QuickContactForm } from './components/QuickContactForm';
 
-const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
+const Navbar: React.FC<{ onContactClick: () => void }> = ({ onContactClick }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -29,9 +30,9 @@ const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
             Thraiv
         </div>
 
-        {/* SUPER OBVIOUS AUDIT BUTTON */}
+        {/* CONTACT US BUTTON */}
         <motion.button
-          onClick={onBookAudit}
+          onClick={onContactClick}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative px-6 py-3 md:px-8 md:py-4 bg-gradient-to-r from-thraiv-blue to-blue-600 text-white font-bold text-base md:text-lg rounded-xl md:rounded-2xl shadow-2xl shadow-blue-500/50 hover:shadow-blue-500/70 transition-all duration-300 flex items-center gap-2 group z-50 touch-manipulation"
@@ -51,7 +52,7 @@ const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
             }}
           />
 
-          <span className="relative z-10">Find My Revenue Leaks</span>
+          <span className="relative z-10">Contact Us Now</span>
           <ArrowRight
             size={20}
             className="relative z-10 group-hover:translate-x-1 transition-transform duration-300"
@@ -78,6 +79,7 @@ const Footer: React.FC = () => (
 
 export default function App() {
   const [showAuditForm, setShowAuditForm] = useState(false);
+  const [showQuickContactForm, setShowQuickContactForm] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -85,13 +87,13 @@ export default function App() {
     restDelta: 0.001
   });
 
-  const handleOpenForm = () => {
-    console.log('🎯 Button clicked! Opening form...');
+  const handleOpenAuditForm = () => {
     setShowAuditForm(true);
-    console.log('📝 showAuditForm set to:', true);
   };
 
-  console.log('🔍 Current showAuditForm state:', showAuditForm);
+  const handleOpenQuickContact = () => {
+    setShowQuickContactForm(true);
+  };
 
   return (
     <div className="antialiased text-thraiv-navy bg-white selection:bg-thraiv-blue selection:text-white">
@@ -101,10 +103,10 @@ export default function App() {
         style={{ scaleX }}
       />
 
-      <Navbar onBookAudit={handleOpenForm} />
+      <Navbar onContactClick={handleOpenQuickContact} />
 
       <main>
-        <Hero onBookAudit={handleOpenForm} />
+        <Hero onBookAudit={handleOpenAuditForm} />
         <VisionSection />
         <TrustBar />
         <PainSection />
@@ -121,7 +123,7 @@ export default function App() {
         <FAQSection />
         <SectionTransition text="" theme="light" />
         <UrgencySection />
-        <AuditSection onBookAudit={handleOpenForm} />
+        <AuditSection onBookAudit={handleOpenAuditForm} />
       </main>
 
       <Footer />
@@ -130,6 +132,13 @@ export default function App() {
       <AnimatePresence>
         {showAuditForm && (
           <AuditForm onClose={() => setShowAuditForm(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Quick Contact Form Modal */}
+      <AnimatePresence>
+        {showQuickContactForm && (
+          <QuickContactForm onClose={() => setShowQuickContactForm(false)} />
         )}
       </AnimatePresence>
     </div>
