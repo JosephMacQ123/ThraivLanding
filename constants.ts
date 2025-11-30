@@ -34,8 +34,8 @@ export const COPY = {
     ],
     INSIGHT_INTRO: "This isn't a people problem.",
     INSIGHT_MAIN: "It's a systems problem. And systems are what make your operations work, react, and solve problems faster than anyone else.",
-    CTA: "Book Free Opportunity Audit",
-    CTA_SUBTEXT: "15 minutes • Zero cost • See exactly where you're leaking revenue"
+    CTA: "Find My Revenue Leaks",
+    CTA_SUBTEXT: "Find out how much profit is being lost through slow responses, chasing and everyday operational delays"
   },
   PAIN: {
     HEADLINE: "These Are The Delays:",
@@ -321,4 +321,228 @@ export const URGENCY = {
     "Every workflow you automate creates compound returns across your business."
   ],
   CTA_TEXT: "Start building your advantage today."
+};
+
+export const REVENUE_LEAK_AUDIT = {
+  TITLE: "Find My Revenue Leaks",
+  INTRO_HEADLINE: "Get Your Free Revenue Leak Report",
+  INTRO_PARAGRAPH: "Every industrial business loses money to slow quoting, delayed replies, constant chasing and buried workloads. This audit highlights where your biggest revenue leaks are and what those delays are costing you. It also shows the fastest wins available based on how your operation runs today.",
+  INTRO_REASSURANCE: "Takes under 90 seconds. Clear and simple. No jargon. Built for busy operations teams.",
+  TRUST_LINE: "Trusted by UK industrial operations teams handling 500+ enquiries monthly",
+
+  STEPS: [
+    {
+      number: 1,
+      title: "Quote & Enquiry Speed",
+      intro: "Slow responses hand business to faster competitors. Slow quoting leaks margin and kills confidence.",
+      estimatedTime: 20,
+      fields: [
+        {
+          id: "rfqs_per_day",
+          label: "RFQs per day",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "1-10", label: "1-10" },
+            { value: "10-30", label: "10-30" },
+            { value: "30-50", label: "30-50" },
+            { value: "50-100", label: "50-100" },
+            { value: "100+", label: "100+" }
+          ]
+        },
+        {
+          id: "quote_turnaround",
+          label: "Typical quote turnaround time",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "<4hrs", label: "Less than 4 hours" },
+            { value: "4-8hrs", label: "4-8 hours" },
+            { value: "8-24hrs", label: "8-24 hours (same day)" },
+            { value: "1-3days", label: "1-3 days" },
+            { value: "3+days", label: "3+ days" }
+          ]
+        },
+        {
+          id: "response_speed",
+          label: "Response speed to new enquiries",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "<1hr", label: "Under 1 hour" },
+            { value: "1-4hrs", label: "1-4 hours" },
+            { value: "4-8hrs", label: "4-8 hours" },
+            { value: "same-day", label: "Same day" },
+            { value: "next-day", label: "Next day or longer" }
+          ]
+        }
+      ]
+    },
+    {
+      number: 2,
+      title: "Workload & Pressure Points",
+      intro: "High inbox volume and constant chasing drag your team away from the work that matters and create hidden labour costs.",
+      estimatedTime: 15,
+      fields: [
+        {
+          id: "email_volume",
+          label: "Customer email volume per day",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "1-20", label: "1-20" },
+            { value: "20-50", label: "20-50" },
+            { value: "50-100", label: "50-100" },
+            { value: "100-200", label: "100-200" },
+            { value: "200+", label: "200+" }
+          ]
+        },
+        {
+          id: "chasing_frequency",
+          label: "How often do customers chase you",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "rarely", label: "Rarely" },
+            { value: "sometimes", label: "Sometimes" },
+            { value: "often", label: "Often" },
+            { value: "constantly", label: "Constantly" }
+          ]
+        },
+        {
+          id: "staff_count",
+          label: "Staff involved in admin and communication",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "1-2", label: "1-2 people" },
+            { value: "3-5", label: "3-5 people" },
+            { value: "6-10", label: "6-10 people" },
+            { value: "10+", label: "10+ people" }
+          ]
+        }
+      ]
+    },
+    {
+      number: 3,
+      title: "Operational Reality Check",
+      intro: "Inconsistent processes, hidden bottlenecks and lack of visibility make it impossible to scale without more people and more pressure.",
+      estimatedTime: 10,
+      fields: [
+        {
+          id: "visibility_level",
+          label: "How much visibility do you have",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "full", label: "Full visibility - we track everything" },
+            { value: "partial", label: "Partial - some gaps" },
+            { value: "limited", label: "Limited - mostly in people's heads" },
+            { value: "none", label: "Almost none - constant firefighting" }
+          ]
+        },
+        {
+          id: "main_bottleneck",
+          label: "Main bottleneck",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "quoting", label: "Quoting speed" },
+            { value: "comms", label: "Customer communication" },
+            { value: "data-entry", label: "Data entry and admin" },
+            { value: "visibility", label: "Lack of visibility" },
+            { value: "all", label: "All of the above" }
+          ]
+        },
+        {
+          id: "process_consistency",
+          label: "Process consistency",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "very-consistent", label: "Very consistent" },
+            { value: "mostly-consistent", label: "Mostly consistent" },
+            { value: "inconsistent", label: "Inconsistent" },
+            { value: "chaotic", label: "Chaotic - everyone does it differently" }
+          ]
+        },
+        {
+          id: "error_frequency",
+          label: "Error frequency",
+          type: "select",
+          required: true,
+          options: [
+            { value: "", label: "Select..." },
+            { value: "rare", label: "Rare" },
+            { value: "occasional", label: "Occasional" },
+            { value: "frequent", label: "Frequent" },
+            { value: "constant", label: "Constant issue" }
+          ]
+        },
+        {
+          id: "average_order_value",
+          label: "Average order value (optional)",
+          helperText: "This helps personalise your revenue recovery estimate",
+          type: "select",
+          required: false,
+          options: [
+            { value: "", label: "Prefer not to say" },
+            { value: "<500", label: "Under £500" },
+            { value: "500-2k", label: "£500 - £2,000" },
+            { value: "2k-5k", label: "£2,000 - £5,000" },
+            { value: "5k-10k", label: "£5,000 - £10,000" },
+            { value: "10k+", label: "£10,000+" }
+          ]
+        }
+      ]
+    }
+  ],
+
+  SUBMIT_BUTTON: "Generate My Report",
+  SUBMIT_REASSURANCE: "Your personalised breakdown will arrive in your inbox shortly",
+
+  CONFIRMATION: {
+    HEADLINE: "Your Revenue Leak Report Is Being Built",
+    BUILDING_MESSAGE: "Analysing your inputs and calculating revenue recovery opportunities...",
+    YOUTUBE_SECTION: {
+      HEADLINE: "While You Wait",
+      SUBHEADLINE: "Watch how we fix these exact problems for UK industrial businesses",
+      BUTTON_TEXT: "See Our Systems In Action"
+    },
+    LEAD_FORM: {
+      HEADLINE: "Want To Discuss Your Results Right Away?",
+      SUBHEADLINE: "Book a call to go through your report together",
+      BUTTON_TEXT: "Send & Book Call"
+    },
+    NEXT_STEPS: {
+      HEADLINE: "What Happens Next",
+      STEPS: [
+        {
+          number: 1,
+          title: "Your report arrives in 5 minutes",
+          detail: "Check your inbox and spam folder"
+        },
+        {
+          number: 2,
+          title: "We review it and contact you shortly",
+          detail: "Our team analyses your specific situation"
+        },
+        {
+          number: 3,
+          title: "We show you exactly how to fix what we found",
+          detail: "Clear roadmap to recover lost revenue"
+        }
+      ]
+    },
+    TRUST_LINE: "Based on real industrial benchmarks and the answers you provided"
+  }
 };

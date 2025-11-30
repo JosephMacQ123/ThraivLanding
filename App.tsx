@@ -51,7 +51,7 @@ const Navbar: React.FC<{ onBookAudit: () => void }> = ({ onBookAudit }) => {
             }}
           />
 
-          <span className="relative z-10">Book Free Audit</span>
+          <span className="relative z-10">Find My Revenue Leaks</span>
           <ArrowRight
             size={20}
             className="relative z-10 group-hover:translate-x-1 transition-transform duration-300"

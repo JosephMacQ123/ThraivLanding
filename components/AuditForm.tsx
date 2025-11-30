@@ -1,186 +1,248 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, Loader, X, User, Mail, Building2, Phone, Target, MessageSquare, Calendar, Clock, Sparkles, Zap, AlertTriangle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Loader, X, Clock, Sparkles, AlertTriangle, ChevronRight, Mail, User, Building2, MessageSquare } from 'lucide-react';
+import { REVENUE_LEAK_AUDIT, COPY } from '../constants';
 
 interface AuditFormProps {
   onClose?: () => void;
 }
 
+interface FormData {
+  // Contact info
+  name: string;
+  email: string;
+  company: string;
+
+  // Step 1: Quote & Enquiry Speed
+  rfqs_per_day: string;
+  quote_turnaround: string;
+  response_speed: string;
+
+  // Step 2: Workload & Pressure Points
+  email_volume: string;
+  chasing_frequency: string;
+  staff_count: string;
+
+  // Step 3: Operational Reality Check
+  visibility_level: string;
+  main_bottleneck: string;
+  process_consistency: string;
+  error_frequency: string;
+  average_order_value: string;
+}
+
+interface LeadFormData {
+  name: string;
+  email: string;
+  company: string;
+  comments: string;
+}
+
 export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
-  const [formData, setFormData] = useState({
+  const [currentStep, setCurrentStep] = useState(0); // 0 = contact, 1-3 = audit steps, 4 = confirmation
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     company: '',
-    phone: '',
-    priority: ''
+    rfqs_per_day: '',
+    quote_turnaround: '',
+    response_speed: '',
+    email_volume: '',
+    chasing_frequency: '',
+    staff_count: '',
+    visibility_level: '',
+    main_bottleneck: '',
+    process_consistency: '',
+    error_frequency: '',
+    average_order_value: ''
   });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-  const modalContentRef = React.useRef<HTMLDivElement>(null);
-  const [completedFields, setCompletedFields] = useState<Set<string>>(new Set());
-  const [isTyping, setIsTyping] = useState(false);
-  const typingTimeoutRef = useRef<number>();
 
-  // Auto-save to localStorage
+  const [leadFormData, setLeadFormData] = useState<LeadFormData>({
+    name: '',
+    email: '',
+    company: '',
+    comments: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [showBuilding, setShowBuilding] = useState(false);
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [leadFormSubmitted, setLeadFormSubmitted] = useState(false);
+  const [showResumeNotification, setShowResumeNotification] = useState(false);
+  const modalContentRef = useRef<HTMLDivElement>(null);
+
+  // Load saved progress
   useEffect(() => {
-    const savedData = localStorage.getItem('thraiv_audit_form_draft');
-    if (savedData) {
+    const saved = localStorage.getItem('thraiv_revenue_audit_draft');
+    if (saved) {
       try {
-        const parsed = JSON.parse(savedData);
-        setFormData(parsed);
+        const parsed = JSON.parse(saved);
+        if (parsed.currentStep > 0) {
+          setShowResumeNotification(true);
+          setTimeout(() => setShowResumeNotification(false), 5000);
+        }
+        setFormData(parsed.formData || formData);
+        setCurrentStep(parsed.currentStep || 0);
       } catch (e) {
         console.error('Failed to load draft:', e);
       }
     }
   }, []);
 
+  // Auto-save progress
   useEffect(() => {
-    if (formData.name || formData.email || formData.company) {
-      localStorage.setItem('thraiv_audit_form_draft', JSON.stringify(formData));
+    if (currentStep > 0 && currentStep < 4) {
+      localStorage.setItem('thraiv_revenue_audit_draft', JSON.stringify({
+        formData,
+        currentStep
+      }));
     }
-  }, [formData]);
+  }, [formData, currentStep]);
 
-  // Haptic feedback helper
-  const triggerHaptic = (intensity: 'light' | 'medium' | 'heavy' = 'medium') => {
-    if ('vibrate' in navigator) {
-      const patterns = {
-        light: [10],
-        medium: [20],
-        heavy: [30, 10, 30]
-      };
-      navigator.vibrate(patterns[intensity]);
+  // Email validation with typo suggestions
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setEmailError('');
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return false;
+    }
+
+    // Check for common typos
+    const commonDomains = ['gmail.com', 'outlook.com', 'hotmail.com', 'yahoo.com'];
+    const domain = email.split('@')[1];
+    const suggestions = commonDomains.filter(d =>
+      d.substring(0, 3) === domain?.substring(0, 3) && d !== domain
+    );
+
+    if (suggestions.length > 0) {
+      setEmailError(`Did you mean ${email.split('@')[0]}@${suggestions[0]}?`);
+      return true; // Still valid, just suggesting
+    }
+
+    setEmailError('');
+    return true;
+  };
+
+  // Update form data
+  const updateFormData = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'email') {
+      validateEmail(value);
     }
   };
 
-  // Sound effects helper
-  const playSound = (frequency: number, duration: number) => {
-    try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-
-      oscillator.frequency.value = frequency;
-      oscillator.type = 'sine';
-
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + duration);
-    } catch (e) {
-      // Silently fail if audio not supported
-    }
+  // Check if contact step is complete
+  const isContactStepComplete = () => {
+    return formData.name && formData.email && formData.company && !emailError;
   };
 
-  // Field validation helpers
-  const isFieldValid = (field: keyof typeof formData) => {
-    const value = formData[field];
-    if (!value) return false;
-    if (field === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    if (field === 'phone') return true; // Optional
-    if (field === 'notes') return true; // Optional
-    return value.length > 0;
+  // Check if current audit step is complete
+  const isCurrentAuditStepComplete = () => {
+    if (currentStep === 0) return isContactStepComplete();
+    if (currentStep < 1 || currentStep > 3) return false;
+
+    const step = REVENUE_LEAK_AUDIT.STEPS[currentStep - 1];
+    return step.fields
+      .filter(f => f.required)
+      .every(f => formData[f.id as keyof FormData]);
   };
 
-  const requiredFieldsCompleted = [
-    isFieldValid('name'),
-    isFieldValid('email'),
-    isFieldValid('company'),
-    isFieldValid('priority'),
-  ].filter(Boolean).length;
-
-  const totalRequiredFields = 4;
-
-  // Milestone celebrations - NOW in correct position after variables are defined
-  useEffect(() => {
-    if (requiredFieldsCompleted > 0) {
-      const progress = requiredFieldsCompleted / totalRequiredFields;
-      // Only celebrate at 50% and 100% milestones to reduce noise
-      if (progress === 0.5) {
-        triggerHaptic('light');
-        playSound(900, 0.1);
-      }
-      if (progress === 1) {
-        triggerHaptic('medium');
-        playSound(1100, 0.15);
+  // Handle next step
+  const handleNext = () => {
+    if (isCurrentAuditStepComplete()) {
+      if (currentStep === 3) {
+        // Submit the form
+        handleSubmit();
+      } else {
+        setCurrentStep(currentStep + 1);
+        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
-  }, [requiredFieldsCompleted, totalRequiredFields]);
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Handle back
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Submit main audit
+  const handleSubmit = async () => {
     setLoading(true);
-
-    // Log form data for debugging
-    console.log('📋 Form Data:', formData);
+    setShowBuilding(true);
 
     try {
-      // Send to n8n webhook
       const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
 
       const payload = {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        phone: formData.phone || 'Not provided',
-        priority: formData.priority,
+        ...formData,
         timestamp: new Date().toISOString(),
-        source: 'thraiv_landing_page',
+        source: 'revenue_leak_audit',
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       };
 
-      console.log('🚀 Sending to webhook:', webhookUrl);
-      console.log('📦 Payload:', payload);
-
-      const response = await fetch(webhookUrl, {
+      await fetch(webhookUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      console.log('✅ Response status:', response.status);
-
-      if (!response.ok) {
-        throw new Error(`Webhook failed with status ${response.status}`);
-      }
-
-      setSubmitted(true);
-      setShowConfetti(true);
-
-      // Scroll to top to see confetti
+      // Simulate building animation
       setTimeout(() => {
+        setShowBuilding(false);
+        setCurrentStep(4);
+        localStorage.removeItem('thraiv_revenue_audit_draft');
         modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 50);
+      }, 3000);
 
-      console.log('🎉 Form submitted successfully!');
     } catch (error) {
-      console.error('❌ Submission error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      });
-      // Still show success to user (form data is logged in console)
-      setSubmitted(true);
-      setShowConfetti(true);
-
-      // Scroll to top to see confetti
+      console.error('Submission error:', error);
+      // Still show success to user
       setTimeout(() => {
-        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 50);
+        setShowBuilding(false);
+        setCurrentStep(4);
+        localStorage.removeItem('thraiv_revenue_audit_draft');
+      }, 3000);
     } finally {
       setLoading(false);
     }
   };
 
-  // Confetti Component - Optimized
+  // Submit lead form
+  const handleLeadFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook/6d6d47fd-4dd0-4b21-97fb-ccfda1bc2592';
+
+      const payload = {
+        ...leadFormData,
+        timestamp: new Date().toISOString(),
+        source: 'revenue_audit_callback',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      setLeadFormSubmitted(true);
+    } catch (error) {
+      console.error('Lead form error:', error);
+      setLeadFormSubmitted(true); // Still show success
+    }
+  };
+
+  // Confetti animation
   const Confetti = () => {
     const pieces = Array.from({ length: 30 }, (_, i) => ({
       id: i,
@@ -218,27 +280,28 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
     );
   };
 
+  // Get time estimate for current step
+  const getTimeEstimate = () => {
+    if (currentStep === 0) return 30;
+    if (currentStep >= 1 && currentStep <= 3) {
+      return REVENUE_LEAK_AUDIT.STEPS[currentStep - 1].estimatedTime;
+    }
+    return 0;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:p-8 bg-black/70 backdrop-blur-sm overflow-y-auto py-8" onClick={onClose}>
-      {/* Simplified Background Gradient Orbs - Less CPU intensive */}
+      {/* Background effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-0 left-0 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
+          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          style={{ willChange: 'transform' }}
         />
         <motion.div
           className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl"
-          animate={{
-            x: [0, -50, 0],
-            y: [0, -30, 0],
-          }}
+          animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          style={{ willChange: 'transform' }}
         />
       </div>
 
@@ -248,533 +311,530 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 30 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-lg w-full relative shadow-2xl border border-white/20 max-h-[85vh] overflow-y-auto"
+        className="bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-10 max-w-2xl w-full relative shadow-2xl border border-white/20 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-          willChange: 'transform, opacity'
-        }}
       >
-        {/* Close Button - Clean X */}
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group"
+          className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors group z-50"
         >
           <X size={24} className="text-gray-400 group-hover:text-gray-600" />
         </button>
 
-        {/* Confetti */}
-        {showConfetti && <Confetti />}
+        {/* Resume Notification */}
+        <AnimatePresence>
+          {showResumeNotification && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-6 left-6 right-20 bg-blue-50 border-2 border-blue-200 rounded-xl p-3 z-40 shadow-lg"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles size={16} className="text-thraiv-blue flex-shrink-0" />
+                <p className="text-sm font-bold text-thraiv-navy">
+                  Welcome back! Picking up where you left off.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence mode="wait">
-          {!submitted ? (
-            <motion.div key="form" exit={{ opacity: 0, y: -10 }}>
-              {/* Decorative Top Accent */}
-              <div className="flex items-center justify-center mb-4">
+          {/* BUILDING ANIMATION */}
+          {showBuilding && (
+            <motion.div
+              key="building"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center py-12"
+            >
+              <Confetti />
+
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="w-20 h-20 mx-auto mb-6"
+              >
+                <Sparkles size={80} className="text-thraiv-blue" />
+              </motion.div>
+
+              <h3 className="text-3xl font-bold text-thraiv-navy mb-4">
+                {REVENUE_LEAK_AUDIT.CONFIRMATION.HEADLINE}
+              </h3>
+
+              <p className="text-gray-600 mb-8">
+                {REVENUE_LEAK_AUDIT.CONFIRMATION.BUILDING_MESSAGE}
+              </p>
+
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-thraiv-blue to-purple-600"
+                  initial={{ width: "0%" }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 3, ease: "easeInOut" }}
+                />
+              </div>
+            </motion.div>
+          )}
+
+          {/* CONTACT STEP (Step 0) */}
+          {!showBuilding && currentStep === 0 && (
+            <motion.div
+              key="contact"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              {/* Header */}
+              <div className="text-center mb-8">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: "100px" }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="h-1 bg-gradient-to-r from-transparent via-thraiv-blue to-transparent rounded-full"
+                  transition={{ duration: 0.6 }}
+                  className="h-1 bg-gradient-to-r from-transparent via-thraiv-blue to-transparent rounded-full mx-auto mb-6"
                 />
-              </div>
 
-              <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-thraiv-navy via-thraiv-blue to-purple-600 mb-2 text-center">
-                Book Your Free Opportunity Audit
-              </h2>
-              <p className="text-gray-600 mb-6 text-sm text-center font-medium">
-                15 minutes. Zero cost. Zero pressure.
-              </p>
+                <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-thraiv-navy via-thraiv-blue to-purple-600 mb-3">
+                  {REVENUE_LEAK_AUDIT.INTRO_HEADLINE}
+                </h2>
 
-              {/* Compelling Value Proposition - Outcome Focused */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 border-2 border-blue-100"
-              >
-                <div className="text-center mb-3">
-                  <span className="text-xs font-black text-thraiv-blue uppercase tracking-wide">You'll Get Your Custom Roadmap To:</span>
-                </div>
-                <div className="space-y-2.5 text-left">
-                  <div className="flex items-start gap-2">
-                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
-                      <CheckCircle size={14} className="text-white" />
-                    </div>
-                    <span className="text-xs font-bold text-gray-800">Where you're losing revenue (and how to recapture it)</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
-                      <CheckCircle size={14} className="text-white" />
-                    </div>
-                    <span className="text-xs font-bold text-gray-800">Which bottlenecks to eliminate first</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="flex items-center justify-center w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5">
-                      <CheckCircle size={14} className="text-white" />
-                    </div>
-                    <span className="text-xs font-bold text-gray-800">3 systems we'd build to fix them</span>
-                  </div>
-                </div>
-
-                {/* Trust Signals */}
-                <div className="mt-4 pt-4 border-t border-blue-200">
-                  <div className="flex items-center justify-center gap-3 text-xs text-gray-600">
-                    <div className="flex items-center gap-1">
-                      <Clock size={12} className="text-green-600" />
-                      <span>90 seconds to complete</span>
-                    </div>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <CheckCircle size={12} className="text-green-600" />
-                      <span>100% free</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Urgency */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
-                className="mb-6 bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-200 rounded-xl p-3"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Zap size={16} className="text-orange-600" />
-                  <span className="text-xs font-black text-orange-900">Only 5 audit spots available this week</span>
-                </div>
-              </motion.div>
-
-              {/* Progress Indicator - Artistic */}
-              <div className="mb-8 bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 p-4 rounded-2xl border border-blue-100">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                    <Sparkles size={14} className="text-thraiv-blue" />
-                    Progress
-                  </span>
-                  <motion.span
-                    key={requiredFieldsCompleted}
-                    initial={{ scale: 1.3, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="text-sm font-black text-thraiv-blue"
-                  >
-                    {requiredFieldsCompleted}/{totalRequiredFields}
-                  </motion.span>
-                </div>
-                <div className="relative w-full h-3 bg-white rounded-full overflow-hidden shadow-inner">
-                  <motion.div
-                    className="h-full bg-gradient-to-r from-thraiv-blue via-purple-500 to-blue-600 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(requiredFieldsCompleted / totalRequiredFields) * 100}%` }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    style={{ willChange: 'width' }}
-                  />
+                <div className="inline-flex items-center gap-2 text-sm text-gray-600 bg-blue-50 px-4 py-2 rounded-full mb-6">
+                  <Clock size={16} className="text-thraiv-blue" />
+                  <span>Est. {getTimeEstimate()} seconds</span>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Name Field - OPTIMIZED */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="relative"
-                >
+              {/* Intro Content */}
+              <div className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-100">
+                <p className="text-gray-700 leading-relaxed mb-4 font-medium">
+                  {REVENUE_LEAK_AUDIT.INTRO_PARAGRAPH}
+                </p>
+                <p className="text-sm text-gray-600 italic">
+                  {REVENUE_LEAK_AUDIT.INTRO_REASSURANCE}
+                </p>
+              </div>
+
+              {/* Contact Form */}
+              <div className="space-y-5">
+                <div>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                     <User size={16} className="text-thraiv-blue" />
                     Your Name
                   </label>
-                  <div className="relative">
-                    {/* Subtle Glow - Only when focused AND not typing */}
-                    {focusedField === 'name' && !isTyping && (
-                      <div className="absolute inset-0 rounded-xl bg-blue-400/20 blur-xl" />
-                    )}
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => updateFormData('name', e.target.value)}
+                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                    placeholder="John Smith"
+                    style={{ fontSize: '16px' }}
+                  />
+                </div>
 
-                    <input
-                      type="text"
-                      required
-                      autoComplete="name"
-                      value={formData.name}
-                      onChange={(e) => {
-                        setFormData({ ...formData, name: e.target.value });
-                        setIsTyping(true);
-
-                        // Clear existing timeout
-                        if (typingTimeoutRef.current) {
-                          clearTimeout(typingTimeoutRef.current);
-                        }
-
-                        // Set typing to false after 500ms of no typing
-                        typingTimeoutRef.current = setTimeout(() => {
-                          setIsTyping(false);
-                          // Subtle haptic feedback when field is completed
-                          if (e.target.value.length > 2 && !completedFields.has('name')) {
-                            setCompletedFields(prev => new Set([...prev, 'name']));
-                            triggerHaptic('light');
-                            playSound(800, 0.1);
-                          }
-                        }, 500);
-                      }}
-                      onFocus={() => {
-                        setFocusedField('name');
-                        setIsTyping(false);
-                      }}
-                      onBlur={() => {
-                        setFocusedField(null);
-                        setIsTyping(false);
-                      }}
-                      className="relative w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12 bg-white"
-                      placeholder="John Smith"
-                      style={{ fontSize: '16px' }}
-                    />
-                    <AnimatePresence>
-                      {isFieldValid('name') && (
-                        <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          exit={{ scale: 0 }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 z-10"
-                        >
-                          <CheckCircle size={20} className="text-green-500" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-
-                {/* Email Field */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 }}
-                >
+                <div>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                     <Mail size={16} className="text-thraiv-blue" />
                     Work Email
                   </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      required
-                      autoComplete="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
-                      placeholder="john@company.com"
-                      style={{ fontSize: '16px' }}
-                    />
-                    <AnimatePresence>
-                      {isFieldValid('email') && (
-                        <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          exit={{ scale: 0 }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2"
-                        >
-                          <CheckCircle size={20} className="text-green-500" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => updateFormData('email', e.target.value)}
+                    onBlur={(e) => validateEmail(e.target.value)}
+                    className={`w-full px-4 py-3.5 text-base rounded-xl border-2 ${emailError && !emailError.includes('Did you mean') ? 'border-red-300' : 'border-gray-200'} focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all`}
+                    placeholder="john@company.com"
+                    style={{ fontSize: '16px' }}
+                  />
+                  {emailError && (
+                    <p className={`text-sm mt-2 ${emailError.includes('Did you mean') ? 'text-orange-600' : 'text-red-600'}`}>
+                      {emailError}
+                    </p>
+                  )}
+                </div>
 
-                {/* Company Field */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
+                <div>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                     <Building2 size={16} className="text-thraiv-blue" />
                     Company
                   </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      required
-                      autoComplete="organization"
-                      value={formData.company}
-                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all pr-12"
-                      placeholder="Acme Distribution Ltd"
-                      style={{ fontSize: '16px' }}
-                    />
-                    <AnimatePresence>
-                      {isFieldValid('company') && (
-                        <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          exit={{ scale: 0 }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2"
-                        >
-                          <CheckCircle size={20} className="text-green-500" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-
-                {/* Phone Field (Optional) */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
-                >
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                    <Phone size={16} className="text-thraiv-blue" />
-                    Phone <span className="text-gray-400 font-normal">(optional)</span>
-                  </label>
                   <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
-                    placeholder="+44 7700 900000"
-                  />
-                </motion.div>
-
-                {/* Priority Dropdown */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                    <Target size={16} className="text-thraiv-blue" />
-                    What do you want to improve first?
-                  </label>
-                  <select
+                    type="text"
                     required
-                    value={formData.priority}
-                    onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all bg-white appearance-none cursor-pointer"
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232676FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'right 1rem center',
-                      backgroundSize: '1.25rem'
-                    }}
-                  >
-                    <option value="">Select one...</option>
-                    <option value="Speed up RFQ/enquiry responses">Speed up RFQ/enquiry responses</option>
-                    <option value="Automate quoting">Automate quoting</option>
-                    <option value="Handle customer emails faster">Handle customer emails faster</option>
-                    <option value="Automate order/status updates">Automate order/status updates</option>
-                    <option value="Get visibility across operations">Get visibility across operations</option>
-                    <option value="Something else">Something else</option>
-                  </select>
-                </motion.div>
-
-                {/* Submit Button - ARTISTIC */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="relative mt-8"
-                >
-                  {/* Subtle Glow effect behind button */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-xl blur-xl opacity-40 pointer-events-none"
-                    animate={{
-                      opacity: [0.3, 0.5, 0.3],
-                    }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    style={{ willChange: 'opacity' }}
+                    value={formData.company}
+                    onChange={(e) => updateFormData('company', e.target.value)}
+                    className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                    placeholder="Acme Distribution Ltd"
+                    style={{ fontSize: '16px' }}
                   />
+                </div>
+              </div>
 
-                  <motion.button
-                    type="submit"
-                    disabled={loading}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="relative w-full px-6 py-5 rounded-xl bg-gradient-to-r from-thraiv-blue via-purple-600 to-blue-600 text-white font-black text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
-                    style={{ willChange: 'transform' }}
-                  >
+              {/* Trust Badge */}
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-500">
+                  {REVENUE_LEAK_AUDIT.TRUST_LINE}
+                </p>
+              </div>
 
-                    {loading ? (
-                      <>
-                        <Loader size={22} className="animate-spin relative z-10" />
-                        <span className="relative z-10">Booking Your Audit...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles size={20} className="relative z-10 group-hover:rotate-12 transition-transform" />
-                        <span className="relative z-10">Show Me My Opportunities</span>
-                        <ArrowRight size={20} className="relative z-10 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </motion.button>
-                </motion.div>
-              </form>
+              {/* Next Button */}
+              <motion.button
+                onClick={handleNext}
+                disabled={!isContactStepComplete()}
+                whileHover={isContactStepComplete() ? { scale: 1.02 } : {}}
+                whileTap={isContactStepComplete() ? { scale: 0.98 } : {}}
+                className="w-full mt-8 px-6 py-5 rounded-xl bg-gradient-to-r from-thraiv-blue via-purple-600 to-blue-600 text-white font-black text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>Start Audit</span>
+                <ChevronRight size={20} />
+              </motion.button>
             </motion.div>
-          ) : (
+          )}
+
+          {/* AUDIT STEPS (Steps 1-3) */}
+          {!showBuilding && currentStep >= 1 && currentStep <= 3 && (
             <motion.div
-              key="success"
+              key={`step-${currentStep}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              {(() => {
+                const step = REVENUE_LEAK_AUDIT.STEPS[currentStep - 1];
+
+                return (
+                  <>
+                    {/* Progress Indicator */}
+                    <div className="mb-8">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-sm font-bold text-gray-600">
+                          Step {currentStep} of 3
+                        </span>
+                        <div className="flex items-center gap-2 text-sm text-gray-600 bg-blue-50 px-3 py-1.5 rounded-full">
+                          <Clock size={14} className="text-thraiv-blue" />
+                          <span>~{step.estimatedTime}s</span>
+                        </div>
+                      </div>
+
+                      {/* Progress Dots */}
+                      <div className="flex gap-2">
+                        {[1, 2, 3].map((num) => (
+                          <div
+                            key={num}
+                            className={`h-2 flex-1 rounded-full transition-all ${
+                              num <= currentStep
+                                ? 'bg-gradient-to-r from-thraiv-blue to-purple-600'
+                                : 'bg-gray-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Step Header */}
+                    <div className="mb-8">
+                      <h3 className="text-2xl md:text-3xl font-bold text-thraiv-navy mb-3">
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed font-medium">
+                        {step.intro}
+                      </p>
+                    </div>
+
+                    {/* Fields */}
+                    <div className="space-y-5">
+                      {step.fields.map((field) => (
+                        <div key={field.id}>
+                          <label className="block text-sm font-bold text-gray-700 mb-2">
+                            {field.label}
+                            {!field.required && (
+                              <span className="text-gray-400 font-normal ml-2">(optional)</span>
+                            )}
+                          </label>
+
+                          {field.helperText && (
+                            <p className="text-sm text-gray-500 mb-2">{field.helperText}</p>
+                          )}
+
+                          <select
+                            required={field.required}
+                            value={formData[field.id as keyof FormData]}
+                            onChange={(e) => updateFormData(field.id as keyof FormData, e.target.value)}
+                            className="w-full px-4 py-3.5 text-base rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all bg-white appearance-none cursor-pointer"
+                            style={{
+                              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232676FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                              backgroundRepeat: 'no-repeat',
+                              backgroundPosition: 'right 1rem center',
+                              backgroundSize: '1.25rem'
+                            }}
+                          >
+                            {field.options?.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Navigation Buttons */}
+                    <div className="flex gap-4 mt-8">
+                      <button
+                        onClick={handleBack}
+                        className="px-6 py-4 rounded-xl border-2 border-gray-200 text-gray-700 font-bold hover:bg-gray-50 transition-all"
+                      >
+                        Back
+                      </button>
+
+                      <motion.button
+                        onClick={handleNext}
+                        disabled={!isCurrentAuditStepComplete() || loading}
+                        whileHover={isCurrentAuditStepComplete() ? { scale: 1.02 } : {}}
+                        whileTap={isCurrentAuditStepComplete() ? { scale: 0.98 } : {}}
+                        className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-thraiv-blue via-purple-600 to-blue-600 text-white font-black text-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader size={20} className="animate-spin" />
+                            <span>Processing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>{currentStep === 3 ? REVENUE_LEAK_AUDIT.SUBMIT_BUTTON : 'Next'}</span>
+                            {currentStep === 3 ? <Sparkles size={20} /> : <ChevronRight size={20} />}
+                          </>
+                        )}
+                      </motion.button>
+                    </div>
+
+                    {currentStep === 3 && (
+                      <p className="text-center text-sm text-gray-500 mt-4">
+                        {REVENUE_LEAK_AUDIT.SUBMIT_REASSURANCE}
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
+            </motion.div>
+          )}
+
+          {/* CONFIRMATION PAGE (Step 4) */}
+          {!showBuilding && currentStep === 4 && (
+            <motion.div
+              key="confirmation"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-8"
+              className="py-6"
             >
-              {/* Animated Success Checkmark */}
+              <Confetti />
+
+              {/* Success Icon */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 className="relative w-24 h-24 mx-auto mb-6"
               >
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.2, 1] }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
                   className="absolute inset-0 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/50"
                 >
                   <CheckCircle size={48} className="text-white" strokeWidth={3} />
                 </motion.div>
-                {/* Pulse rings */}
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute inset-0 rounded-full border-4 border-green-400"
-                    initial={{ scale: 1, opacity: 0.6 }}
-                    animate={{ scale: [1, 2, 2.5], opacity: [0.6, 0.3, 0] }}
-                    transition={{
-                      duration: 2,
-                      delay: 0.4 + i * 0.4,
-                      repeat: Infinity,
-                      ease: "easeOut"
-                    }}
-                  />
-                ))}
               </motion.div>
 
-              <motion.h3
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-3xl md:text-4xl font-black text-thraiv-navy mb-3"
-              >
-                You're In! 🎉
-              </motion.h3>
+              <h3 className="text-3xl md:text-4xl font-black text-thraiv-navy mb-4 text-center">
+                Report Building Complete!
+              </h3>
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-gray-600 text-base mb-6 max-w-md mx-auto leading-relaxed"
-              >
-                {formData.name ? `Thanks ${formData.name.split(' ')[0]}! ` : ''}We'll analyze {formData.priority ? `your ${formData.priority.toLowerCase()}` : 'your current problems'} and get back to you ASAP with next steps
-              </motion.p>
-
-              {/* Important: Check Spam */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7 }}
-                className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 mb-6 max-w-md mx-auto"
-              >
-                <div className="flex items-center gap-2 justify-center text-sm font-bold text-yellow-800">
-                  <AlertTriangle size={16} />
-                  <span>Check your spam/junk folder!</span>
+              {/* YouTube Section */}
+              <div className="mb-8 bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-100 rounded-2xl p-6">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <Sparkles size={18} className="text-red-600" />
+                  <h4 className="text-lg font-bold text-gray-800">
+                    {REVENUE_LEAK_AUDIT.CONFIRMATION.YOUTUBE_SECTION.HEADLINE}
+                  </h4>
                 </div>
-                <p className="text-xs text-yellow-700 mt-1 text-center">Our confirmation email might land there</p>
-              </motion.div>
-
-              {/* While You Wait - YouTube */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.75 }}
-                className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-100 rounded-xl p-4 mb-8 max-w-md mx-auto"
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Sparkles size={16} className="text-red-600" />
-                  <span className="text-sm font-bold text-gray-800">While You Wait</span>
-                </div>
-                <p className="text-xs text-gray-600 mb-3">See how we help businesses like yours move faster</p>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  {REVENUE_LEAK_AUDIT.CONFIRMATION.YOUTUBE_SECTION.SUBHEADLINE}
+                </p>
                 <a
-                  href="https://www.youtube.com/@Joseph.Thraiv"
+                  href={COPY.FRICTION.YOUTUBE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-lg transition-all hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-sm rounded-xl transition-all hover:scale-105 active:scale-95 w-full justify-center"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                   </svg>
-                  Watch Our Channel
+                  {REVENUE_LEAK_AUDIT.CONFIRMATION.YOUTUBE_SECTION.BUTTON_TEXT}
                 </a>
-              </motion.div>
+              </div>
 
-              {/* What Happens Next - Clear Step by Step */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="space-y-3 mb-8"
-              >
-                <h4 className="text-sm font-bold text-gray-800 mb-4 text-center">Here's Exactly What Happens Next:</h4>
+              {/* Lead Form Section */}
+              {!showLeadForm && !leadFormSubmitted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-8"
+                >
+                  <button
+                    onClick={() => {
+                      setShowLeadForm(true);
+                      setLeadFormData({
+                        name: formData.name,
+                        email: formData.email,
+                        company: formData.company,
+                        comments: ''
+                      });
+                    }}
+                    className="w-full bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6 hover:border-blue-300 transition-all group"
+                  >
+                    <h4 className="text-xl font-bold text-thraiv-navy mb-2 group-hover:text-thraiv-blue transition-colors">
+                      {REVENUE_LEAK_AUDIT.CONFIRMATION.LEAD_FORM.HEADLINE}
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      {REVENUE_LEAK_AUDIT.CONFIRMATION.LEAD_FORM.SUBHEADLINE}
+                    </p>
+                    <div className="inline-flex items-center gap-2 text-thraiv-blue font-bold">
+                      <span>Click to book</span>
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </button>
+                </motion.div>
+              )}
 
-                <div className="flex items-start gap-3 text-left bg-blue-50 p-3.5 rounded-xl border border-blue-100">
-                  <div className="flex items-center justify-center w-6 h-6 bg-thraiv-blue rounded-full flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-black">1</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-black text-thraiv-navy text-sm">Confirmation Email Arrives</div>
-                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">Check your inbox (and spam!) in the next 2 minutes</div>
-                  </div>
+              {showLeadForm && !leadFormSubmitted && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6"
+                >
+                  <h4 className="text-xl font-bold text-thraiv-navy mb-4">
+                    {REVENUE_LEAK_AUDIT.CONFIRMATION.LEAD_FORM.HEADLINE}
+                  </h4>
+
+                  <form onSubmit={handleLeadFormSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={leadFormData.name}
+                        onChange={(e) => setLeadFormData({...leadFormData, name: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={leadFormData.email}
+                        onChange={(e) => setLeadFormData({...leadFormData, email: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Company</label>
+                      <input
+                        type="text"
+                        required
+                        value={leadFormData.company}
+                        onChange={(e) => setLeadFormData({...leadFormData, company: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-2">
+                        What would help most right now?
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={leadFormData.comments}
+                        onChange={(e) => setLeadFormData({...leadFormData, comments: e.target.value})}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-thraiv-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all resize-none"
+                        placeholder="Optional - helps us prepare for the call"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-thraiv-blue to-purple-600 text-white font-bold hover:shadow-xl transition-all"
+                    >
+                      {REVENUE_LEAK_AUDIT.CONFIRMATION.LEAD_FORM.BUTTON_TEXT}
+                    </button>
+                  </form>
+                </motion.div>
+              )}
+
+              {leadFormSubmitted && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mb-8 bg-green-50 border-2 border-green-200 rounded-2xl p-6 text-center"
+                >
+                  <CheckCircle size={40} className="text-green-600 mx-auto mb-3" />
+                  <h4 className="text-lg font-bold text-green-900 mb-2">
+                    Call Request Received!
+                  </h4>
+                  <p className="text-sm text-green-700">
+                    We'll be in touch shortly to schedule your call.
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Next Steps */}
+              <div className="mb-8">
+                <h4 className="text-xl font-bold text-gray-800 mb-6 text-center">
+                  {REVENUE_LEAK_AUDIT.CONFIRMATION.NEXT_STEPS.HEADLINE}
+                </h4>
+
+                <div className="space-y-4">
+                  {REVENUE_LEAK_AUDIT.CONFIRMATION.NEXT_STEPS.STEPS.map((step, i) => (
+                    <div key={i} className="flex items-start gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                      <div className="flex items-center justify-center w-8 h-8 bg-thraiv-blue rounded-full flex-shrink-0">
+                        <span className="text-white text-sm font-black">{step.number}</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-bold text-thraiv-navy text-sm mb-1">{step.title}</div>
+                        <div className="text-xs text-gray-600">{step.detail}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                <div className="flex items-start gap-3 text-left bg-purple-50 p-3.5 rounded-xl border border-purple-100">
-                  <div className="flex items-center justify-center w-6 h-6 bg-purple-600 rounded-full flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-black">2</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-black text-thraiv-navy text-sm">We Analyze Your Operations</div>
-                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We identify your quick wins, bottlenecks, and biggest opportunities</div>
-                  </div>
+              {/* Spam Warning */}
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-2 justify-center text-sm font-bold text-yellow-800">
+                  <AlertTriangle size={16} />
+                  <span>Check your spam folder!</span>
                 </div>
+                <p className="text-xs text-yellow-700 mt-1 text-center">
+                  Our report might land there - don't miss it
+                </p>
+              </div>
 
-                <div className="flex items-start gap-3 text-left bg-green-50 p-3.5 rounded-xl border border-green-100">
-                  <div className="flex items-center justify-center w-6 h-6 bg-green-600 rounded-full flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-black">3</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-black text-thraiv-navy text-sm">We Contact You Within A Few Minutes</div>
-                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">We'll reach out via email to start the conversation</div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 text-left bg-orange-50 p-3.5 rounded-xl border border-orange-100">
-                  <div className="flex items-center justify-center w-6 h-6 bg-orange-600 rounded-full flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-black">4</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-black text-thraiv-navy text-sm">Book In Your Call</div>
-                    <div className="text-xs text-gray-600 mt-1 leading-relaxed">Schedule your 15-minute audit and get your custom roadmap</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Social Proof */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-xl border border-blue-100 mb-6"
-              >
-                <div className="text-2xl font-black text-thraiv-blue mb-1">2.4x Average Growth</div>
-                <div className="text-xs text-gray-600">With intelligent operations systems</div>
-              </motion.div>
+              {/* Trust Line */}
+              <p className="text-center text-sm text-gray-500">
+                {REVENUE_LEAK_AUDIT.CONFIRMATION.TRUST_LINE}
+              </p>
 
               {/* Close Button */}
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
+              <button
                 onClick={onClose}
-                className="text-gray-500 hover:text-thraiv-navy font-medium text-sm transition-colors"
+                className="w-full mt-6 text-gray-500 hover:text-thraiv-navy font-medium text-sm transition-colors"
               >
                 Close
-              </motion.button>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
