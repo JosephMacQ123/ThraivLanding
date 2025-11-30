@@ -1,7 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle, Loader, X, Clock, Sparkles, AlertTriangle, ChevronRight, Mail, User, Building2, MessageSquare } from 'lucide-react';
+import { ArrowRight, CheckCircle, Loader, X, Clock, Sparkles, AlertTriangle, ChevronRight, Mail, User, Building2, MessageSquare, HelpCircle } from 'lucide-react';
 import { REVENUE_LEAK_AUDIT, COPY } from '../constants';
+
+// Tooltip component
+const Tooltip: React.FC<{ text: string }> = ({ text }) => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div className="relative inline-block">
+      <button
+        type="button"
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onClick={() => setShow(!show)}
+        className="ml-1.5 text-gray-400 hover:text-thraiv-blue transition-colors"
+      >
+        <HelpCircle size={14} />
+      </button>
+
+      <AnimatePresence>
+        {show && (
+          <motion.div
+            initial={{ opacity: 0, y: -5, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -5, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-0 top-6 z-50 bg-thraiv-navy text-white text-xs px-3 py-2 rounded-lg shadow-xl whitespace-nowrap pointer-events-none"
+          >
+            {text}
+            <div className="absolute -top-1 left-4 w-2 h-2 bg-thraiv-navy transform rotate-45" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 interface AuditFormProps {
   onClose?: () => void;
@@ -441,6 +475,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                     <Mail size={16} className="text-thraiv-blue" />
                     Work Email
+                    <Tooltip text="We'll send your report here" />
                   </label>
                   <input
                     type="email"
@@ -463,6 +498,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                     <Building2 size={16} className="text-thraiv-blue" />
                     Company
+                    <Tooltip text="Helps us personalise your report" />
                   </label>
                   <input
                     type="text"
