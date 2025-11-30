@@ -183,6 +183,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
 
       const payload = {
         ...formData,
+        report_email: 'joseph@thraiv.co.uk', // Always send report to Joseph
         timestamp: new Date().toISOString(),
         source: 'revenue_leak_audit',
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -194,13 +195,13 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         body: JSON.stringify(payload)
       });
 
-      // Simulate building animation
+      // Simulate building animation (faster 1.5s transition)
       setTimeout(() => {
         setShowBuilding(false);
         setCurrentStep(4);
         localStorage.removeItem('thraiv_revenue_audit_draft');
         modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 3000);
+      }, 1500);
 
     } catch (error) {
       console.error('Submission error:', error);
@@ -209,7 +210,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         setShowBuilding(false);
         setCurrentStep(4);
         localStorage.removeItem('thraiv_revenue_audit_draft');
-      }, 3000);
+      }, 1500);
     } finally {
       setLoading(false);
     }
@@ -224,6 +225,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
 
       const payload = {
         ...leadFormData,
+        report_email: 'joseph@thraiv.co.uk', // Always notify Joseph
         timestamp: new Date().toISOString(),
         source: 'revenue_audit_callback',
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -374,7 +376,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
                   className="h-full bg-gradient-to-r from-thraiv-blue to-purple-600"
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
-                  transition={{ duration: 3, ease: "easeInOut" }}
+                  transition={{ duration: 1.5, ease: "easeInOut" }}
                 />
               </div>
             </motion.div>

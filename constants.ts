@@ -339,44 +339,58 @@ export const REVENUE_LEAK_AUDIT = {
       fields: [
         {
           id: "rfqs_per_day",
-          label: "RFQs per day",
+          label: "How many quote requests (RFQs) do you receive per day?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "1-10", label: "1-10" },
-            { value: "10-30", label: "10-30" },
-            { value: "30-50", label: "30-50" },
-            { value: "50-100", label: "50-100" },
-            { value: "100+", label: "100+" }
+            { value: "", label: "Select average daily volume..." },
+            { value: "0-5", label: "0-5 per day" },
+            { value: "5-10", label: "5-10 per day" },
+            { value: "10-20", label: "10-20 per day" },
+            { value: "20-30", label: "20-30 per day" },
+            { value: "30-50", label: "30-50 per day" },
+            { value: "50-75", label: "50-75 per day" },
+            { value: "75-100", label: "75-100 per day" },
+            { value: "100+", label: "100+ per day" }
           ]
         },
         {
           id: "quote_turnaround",
-          label: "Typical quote turnaround time",
+          label: "How long does it typically take you to send a quote after receiving an RFQ?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "<4hrs", label: "Less than 4 hours" },
-            { value: "4-8hrs", label: "4-8 hours" },
-            { value: "8-24hrs", label: "8-24 hours (same day)" },
-            { value: "1-3days", label: "1-3 days" },
-            { value: "3+days", label: "3+ days" }
+            { value: "", label: "Select typical turnaround time..." },
+            { value: "<30min", label: "Under 30 minutes" },
+            { value: "30min-1hr", label: "30 minutes to 1 hour" },
+            { value: "1-2hrs", label: "1-2 hours" },
+            { value: "2-4hrs", label: "2-4 hours" },
+            { value: "4-8hrs", label: "4-8 hours (same day)" },
+            { value: "8-24hrs", label: "8-24 hours (next day)" },
+            { value: "1-2days", label: "1-2 business days" },
+            { value: "2-3days", label: "2-3 business days" },
+            { value: "3-5days", label: "3-5 business days" },
+            { value: "5+days", label: "Over 5 business days" }
           ]
         },
         {
           id: "response_speed",
-          label: "Response speed to new enquiries",
+          label: "How quickly do you typically respond to new customer enquiries (first reply)?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "<1hr", label: "Under 1 hour" },
-            { value: "1-4hrs", label: "1-4 hours" },
-            { value: "4-8hrs", label: "4-8 hours" },
-            { value: "same-day", label: "Same day" },
-            { value: "next-day", label: "Next day or longer" }
+            { value: "", label: "Select typical first response time..." },
+            { value: "<1min", label: "Under 1 minute (instant)" },
+            { value: "1-5min", label: "1-5 minutes" },
+            { value: "5-15min", label: "5-15 minutes" },
+            { value: "15-30min", label: "15-30 minutes" },
+            { value: "30min-1hr", label: "30 minutes to 1 hour" },
+            { value: "1-2hrs", label: "1-2 hours" },
+            { value: "2-4hrs", label: "2-4 hours" },
+            { value: "4-8hrs", label: "4-8 hours (same day)" },
+            { value: "same-day", label: "Same day (within 8 hours)" },
+            { value: "next-day", label: "Next business day" },
+            { value: "2+days", label: "2+ business days" }
           ]
         }
       ]
@@ -389,42 +403,49 @@ export const REVENUE_LEAK_AUDIT = {
       fields: [
         {
           id: "email_volume",
-          label: "Customer email volume per day",
+          label: "How many customer emails does your team handle per day (total across all staff)?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "1-20", label: "1-20" },
-            { value: "20-50", label: "20-50" },
-            { value: "50-100", label: "50-100" },
-            { value: "100-200", label: "100-200" },
-            { value: "200+", label: "200+" }
+            { value: "", label: "Select daily email volume..." },
+            { value: "0-10", label: "0-10 emails per day" },
+            { value: "10-25", label: "10-25 emails per day" },
+            { value: "25-50", label: "25-50 emails per day" },
+            { value: "50-75", label: "50-75 emails per day" },
+            { value: "75-100", label: "75-100 emails per day" },
+            { value: "100-150", label: "100-150 emails per day" },
+            { value: "150-200", label: "150-200 emails per day" },
+            { value: "200-300", label: "200-300 emails per day" },
+            { value: "300+", label: "Over 300 emails per day" }
           ]
         },
         {
           id: "chasing_frequency",
-          label: "How often do customers chase you",
+          label: "How often do customers chase you for updates, quotes or responses?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "rarely", label: "Rarely" },
-            { value: "sometimes", label: "Sometimes" },
-            { value: "often", label: "Often" },
-            { value: "constantly", label: "Constantly" }
+            { value: "", label: "Select how often this happens..." },
+            { value: "never", label: "Almost never - we're on top of it" },
+            { value: "rarely", label: "Rarely - once or twice a week" },
+            { value: "sometimes", label: "Sometimes - a few times per week" },
+            { value: "often", label: "Often - multiple times per day" },
+            { value: "constantly", label: "Constantly - it's a daily problem" }
           ]
         },
         {
           id: "staff_count",
-          label: "Staff involved in admin and communication",
+          label: "How many people spend significant time on quoting, emails and customer admin?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "1-2", label: "1-2 people" },
+            { value: "", label: "Select number of staff..." },
+            { value: "1", label: "Just 1 person" },
+            { value: "2", label: "2 people" },
             { value: "3-5", label: "3-5 people" },
             { value: "6-10", label: "6-10 people" },
-            { value: "10+", label: "10+ people" }
+            { value: "11-15", label: "11-15 people" },
+            { value: "15+", label: "Over 15 people" }
           ]
         }
       ]
@@ -437,70 +458,79 @@ export const REVENUE_LEAK_AUDIT = {
       fields: [
         {
           id: "visibility_level",
-          label: "How much visibility do you have",
+          label: "How much visibility do you have across quotes, orders and customer interactions?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "full", label: "Full visibility - we track everything" },
-            { value: "partial", label: "Partial - some gaps" },
-            { value: "limited", label: "Limited - mostly in people's heads" },
-            { value: "none", label: "Almost none - constant firefighting" }
+            { value: "", label: "Select current visibility level..." },
+            { value: "full", label: "Full visibility - we track everything in real-time" },
+            { value: "good", label: "Good - we can find most things when we need to" },
+            { value: "partial", label: "Partial - some things slip through the cracks" },
+            { value: "limited", label: "Limited - mostly in people's heads and spreadsheets" },
+            { value: "none", label: "Almost none - constant firefighting and searching" }
           ]
         },
         {
           id: "main_bottleneck",
-          label: "Main bottleneck",
+          label: "What is your biggest operational bottleneck right now?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "quoting", label: "Quoting speed" },
-            { value: "comms", label: "Customer communication" },
-            { value: "data-entry", label: "Data entry and admin" },
-            { value: "visibility", label: "Lack of visibility" },
-            { value: "all", label: "All of the above" }
+            { value: "", label: "Select your main bottleneck..." },
+            { value: "quoting-speed", label: "Quote turnaround time is too slow" },
+            { value: "response-time", label: "Responding to enquiries takes too long" },
+            { value: "customer-comms", label: "Keeping customers updated and informed" },
+            { value: "data-entry", label: "Manual data entry and admin work" },
+            { value: "visibility", label: "Not knowing what's happening in real-time" },
+            { value: "staff-capacity", label: "Team is overwhelmed with volume" },
+            { value: "all", label: "All of the above - multiple issues" }
           ]
         },
         {
           id: "process_consistency",
-          label: "Process consistency",
+          label: "How consistent are your processes across the team?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "very-consistent", label: "Very consistent" },
-            { value: "mostly-consistent", label: "Mostly consistent" },
-            { value: "inconsistent", label: "Inconsistent" },
-            { value: "chaotic", label: "Chaotic - everyone does it differently" }
+            { value: "", label: "Select process consistency level..." },
+            { value: "very-consistent", label: "Very consistent - everyone follows the same process" },
+            { value: "mostly-consistent", label: "Mostly consistent - minor variations between people" },
+            { value: "somewhat-consistent", label: "Somewhat consistent - depends on who handles it" },
+            { value: "inconsistent", label: "Inconsistent - everyone has their own way" },
+            { value: "chaotic", label: "Chaotic - no standard process at all" }
           ]
         },
         {
           id: "error_frequency",
-          label: "Error frequency",
+          label: "How often do errors occur (wrong quotes, missed emails, incorrect data)?",
           type: "select",
           required: true,
           options: [
-            { value: "", label: "Select..." },
-            { value: "rare", label: "Rare" },
-            { value: "occasional", label: "Occasional" },
-            { value: "frequent", label: "Frequent" },
-            { value: "constant", label: "Constant issue" }
+            { value: "", label: "Select how often errors happen..." },
+            { value: "almost-never", label: "Almost never - very rare" },
+            { value: "rare", label: "Rare - once or twice a month" },
+            { value: "occasional", label: "Occasional - a few times per week" },
+            { value: "frequent", label: "Frequent - multiple times per week" },
+            { value: "daily", label: "Daily - happens every single day" }
           ]
         },
         {
           id: "average_order_value",
-          label: "Average order value (optional)",
-          helperText: "This helps personalise your revenue recovery estimate",
+          label: "What is your typical order value? (optional but helps personalise your report)",
+          helperText: "This helps us calculate your potential revenue recovery more accurately",
           type: "select",
           required: false,
           options: [
             { value: "", label: "Prefer not to say" },
-            { value: "<500", label: "Under £500" },
-            { value: "500-2k", label: "£500 - £2,000" },
+            { value: "<250", label: "Under £250" },
+            { value: "250-500", label: "£250 - £500" },
+            { value: "500-1k", label: "£500 - £1,000" },
+            { value: "1k-2k", label: "£1,000 - £2,000" },
             { value: "2k-5k", label: "£2,000 - £5,000" },
             { value: "5k-10k", label: "£5,000 - £10,000" },
-            { value: "10k+", label: "£10,000+" }
+            { value: "10k-25k", label: "£10,000 - £25,000" },
+            { value: "25k-50k", label: "£25,000 - £50,000" },
+            { value: "50k+", label: "Over £50,000" }
           ]
         }
       ]
