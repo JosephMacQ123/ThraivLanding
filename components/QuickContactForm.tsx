@@ -20,7 +20,7 @@ export const QuickContactForm: React.FC<QuickContactFormProps> = ({ onClose }) =
     setLoading(true);
 
     try {
-      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook/a3e264ba-585c-4af9-95ca-5d132dc29df3';
+      const webhookUrl = 'https://thraiv.app.n8n.cloud/webhook-test/3856f6db-96d5-42f6-8da7-103f7e2cac57';
 
       const payload = {
         ...formData,
