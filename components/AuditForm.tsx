@@ -223,24 +223,29 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       };
 
-      await fetch(webhookUrl, {
+      // Send webhook in background (don't wait)
+      fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      // Go straight to confirmation (no delay)
-      setShowBuilding(false);
-      setCurrentStep(4);
-      localStorage.removeItem('thraiv_revenue_audit_draft');
-      modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      // Show building screen for 1 second, then confirmation
+      setTimeout(() => {
+        setShowBuilding(false);
+        setCurrentStep(4);
+        localStorage.removeItem('thraiv_revenue_audit_draft');
+        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1000);
 
     } catch (error) {
       console.error('Submission error:', error);
-      // Still show success to user
-      setShowBuilding(false);
-      setCurrentStep(4);
-      localStorage.removeItem('thraiv_revenue_audit_draft');
+      // Still show success to user after 1 second
+      setTimeout(() => {
+        setShowBuilding(false);
+        setCurrentStep(4);
+        localStorage.removeItem('thraiv_revenue_audit_draft');
+      }, 1000);
     } finally {
       setLoading(false);
     }
