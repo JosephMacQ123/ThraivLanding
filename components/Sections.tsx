@@ -611,7 +611,7 @@ export const HowItWorksSection: React.FC = () => {
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="h-full relative group"
+                                className={`h-full relative group ${i === 4 ? 'md:col-span-2 md:max-w-2xl md:mx-auto' : ''}`}
                                 style={{ zIndex: 5 - i }}
                             >
                                 {/* Flow Arrow - Shows between every card */}
