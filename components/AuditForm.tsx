@@ -229,22 +229,18 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         body: JSON.stringify(payload)
       });
 
-      // Quick flash before confirmation (0.5s)
-      setTimeout(() => {
-        setShowBuilding(false);
-        setCurrentStep(4);
-        localStorage.removeItem('thraiv_revenue_audit_draft');
-        modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 500);
+      // Go straight to confirmation (no delay)
+      setShowBuilding(false);
+      setCurrentStep(4);
+      localStorage.removeItem('thraiv_revenue_audit_draft');
+      modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (error) {
       console.error('Submission error:', error);
       // Still show success to user
-      setTimeout(() => {
-        setShowBuilding(false);
-        setCurrentStep(4);
-        localStorage.removeItem('thraiv_revenue_audit_draft');
-      }, 500);
+      setShowBuilding(false);
+      setCurrentStep(4);
+      localStorage.removeItem('thraiv_revenue_audit_draft');
     } finally {
       setLoading(false);
     }
