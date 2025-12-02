@@ -326,8 +326,8 @@ export const URGENCY = {
 export const REVENUE_LEAK_AUDIT = {
   TITLE: "Find My Revenue Leaks",
   INTRO_HEADLINE: "Get Your Free Revenue Leak Report",
-  INTRO_PARAGRAPH: "Every industrial business loses money to slow quoting, delayed replies, constant chasing and buried workloads. This audit highlights where your biggest revenue leaks are and what those delays are costing you. It also shows the fastest wins available based on how your operation runs today.",
-  INTRO_REASSURANCE: "Takes under 90 seconds. Clear and simple. No jargon. Built for busy operations teams.",
+  INTRO_PARAGRAPH: "Every industrial business loses money to slow quoting, delayed replies and buried workloads. This audit shows where your biggest leaks are, what they're costing, and the fastest wins available.",
+  INTRO_REASSURANCE: "Under 90 seconds. No jargon.",
   TRUST_LINE: "Trusted by UK industrial operations teams handling 500+ enquiries monthly",
 
   STEPS: [

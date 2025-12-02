@@ -229,13 +229,13 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         body: JSON.stringify(payload)
       });
 
-      // Simulate building animation (faster 1.5s transition)
+      // Show building animation for 2.5 seconds
       setTimeout(() => {
         setShowBuilding(false);
         setCurrentStep(4);
         localStorage.removeItem('thraiv_revenue_audit_draft');
         modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 1500);
+      }, 2500);
 
     } catch (error) {
       console.error('Submission error:', error);
@@ -244,7 +244,7 @@ export const AuditForm: React.FC<AuditFormProps> = ({ onClose }) => {
         setShowBuilding(false);
         setCurrentStep(4);
         localStorage.removeItem('thraiv_revenue_audit_draft');
-      }, 1500);
+      }, 2500);
     } finally {
       setLoading(false);
     }
