@@ -184,7 +184,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
               >
                 <Shield size={16} className="text-blue-600" />
               </motion.div>
-              Built for $1M-$50M Businesses
+              Built for Email-Driven Teams
             </motion.div>
 
             {/* Headline - MAXIMUM MAGICAL TREATMENT */}
@@ -241,7 +241,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAudit }) => {
                   `
                 }}
               >
-                Fast Operations Win
+                Email Is Costing You Business
               </span>
               <span className="block text-2xl md:text-3xl lg:text-4xl font-medium text-gray-600 leading-[1.4] max-w-3xl relative">
                 The delays you think are normal are the ones killing your growth
