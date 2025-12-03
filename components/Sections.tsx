@@ -1302,7 +1302,7 @@ export const AuditSection: React.FC<AuditSectionProps> = ({ onBookAudit }) => {
                           icon={<ArrowRight size={24} />}
                           onClick={onBookAudit}
                         >
-                            Book Your Free Opportunity Audit
+                            Free Revenue Leak Report
                         </Button>
 
                         <div className="flex items-center justify-center gap-8 text-sm text-gray-400 mt-4">
