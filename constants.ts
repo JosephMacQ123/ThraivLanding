@@ -13,13 +13,13 @@ export const COLORS = {
 export const TRUST_POINTS = [
     {
         icon: Shield,
-        label: "Fortune 500 Systems",
-        value: "$100M+ Operations"
+        label: "Built For Scale",
+        value: "15+ Years Building Fortune 500 Systems"
     },
     {
         icon: Award,
-        label: "Best Result",
-        value: "$1M to $6M (3 Years)"
+        label: "Proven Results",
+        value: "Operations Scaled 6x Without Headcount"
     }
 ];
 
@@ -35,7 +35,7 @@ export const COPY = {
     INSIGHT_INTRO: "This isn't a people problem.",
     INSIGHT_MAIN: "It's a systems problem. And systems are what make your operations work, react, and solve problems faster than anyone else.",
     CTA: "Find My Revenue Leaks",
-    CTA_SUBTEXT: "Find out how much profit is being lost through slow responses, chasing and everyday operational delays"
+    CTA_SUBTEXT: "See the real cost of what's invisible right now: quotes sitting in inboxes, customers waiting for responses, hours burned chasing what should be automatic"
   },
   PAIN: {
     HEADLINE: "These Are The Delays:",
